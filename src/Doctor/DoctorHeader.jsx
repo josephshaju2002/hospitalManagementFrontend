@@ -5,6 +5,7 @@ import { FaFacebookSquare } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { TiThMenu } from "react-icons/ti";
 import { IoPersonOutline } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 function DoctorHeader() {
   const [listStatus, setlistStatus] = useState(false);
@@ -69,6 +70,23 @@ function DoctorHeader() {
           </li>
         </ul>
       </nav>
+      <div className="w-full bg-blue-600 py-2 overflow-hidden">
+        <motion.h2
+          initial={{ x: "100%" }}
+          animate={{ x: "-110%" }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+          }}
+          className="text-xl font-semibold whitespace-nowrap text-white px-5"
+        >
+          Reliable patient care begins with trust, compassion, and timely
+          support from skilled medical professionals. Every appointment offers
+          an opportunity to ensure comfort and clarity.
+        </motion.h2>
+      </div>
     </>
   );
 }

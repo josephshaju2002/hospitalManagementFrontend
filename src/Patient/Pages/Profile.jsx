@@ -82,41 +82,64 @@ export default function ProfilePage() {
 
           {/* TAB 1: Edit Details */}
           {activeTab === "details" && (
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <form className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
 
-              <div>
-                <label className="block font-semibold mb-1">Full Name</label>
-                <div className="relative">
-                  <FaUser className="absolute left-3 top-3 text-gray-500" />
-                  <input type="text" className="w-full pl-10 p-3 border rounded-lg" placeholder="Enter your name" />
-                </div>
-              </div>
+    {/* Full Name */}
+    <div className="w-full">
+      <label className="block font-semibold mb-1">Full Name</label>
+      <div className="relative">
+        <FaUser className="absolute left-3 top-3 text-gray-500" />
+        <input
+          type="text"
+          className="w-full pl-10 p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+          placeholder="Enter your name"
+        />
+      </div>
+    </div>
 
-              <div>
-                <label className="block font-semibold mb-1">Email Address</label>
-                <div className="relative">
-                  <FaEnvelope className="absolute left-3 top-3 text-gray-500" />
-                  <input type="email" className="w-full pl-10 p-3 border rounded-lg" placeholder="Enter email" />
-                </div>
-              </div>
+    {/* Email */}
+    <div className="w-full">
+      <label className="block font-semibold mb-1">Email Address</label>
+      <div className="relative">
+        <FaEnvelope className="absolute left-3 top-3 text-gray-500" />
+        <input
+          type="email"
+          className="w-full pl-10 p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+          placeholder="Enter email"
+        />
+      </div>
+    </div>
 
-              <div>
-                <label className="block font-semibold mb-1">Phone Number</label>
-                <input type="text" className="w-full p-3 border rounded-lg" placeholder="Enter phone number" />
-              </div>
+    {/* Phone */}
+    <div className="w-full">
+      <label className="block font-semibold mb-1">Phone Number</label>
+      <input
+        type="text"
+        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+        placeholder="Enter phone number"
+      />
+    </div>
 
-              <div>
-                <label className="block font-semibold mb-1">Address</label>
-                <input type="text" className="w-full p-3 border rounded-lg" placeholder="Your address" />
-              </div>
+    {/* Address */}
+    <div className="w-full">
+      <label className="block font-semibold mb-1">Address</label>
+      <input
+        type="text"
+        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+        placeholder="Your address"
+      />
+    </div>
 
-              <div className="col-span-2 flex justify-end">
-                <button className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700">
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          )}
+    {/* Save Button */}
+    <div className="col-span-1 md:col-span-2 flex justify-end">
+      <button className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+        Save Changes
+      </button>
+    </div>
+
+  </form>
+)}
+
 
           {/* TAB 2: Change Password */}
           {activeTab === "password" && (
