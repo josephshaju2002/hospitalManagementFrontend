@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import AdminHeader from '../Components/Adminheader'
 import AdminSidebar from '../Components/AdminSidebar'
+import Footer2 from '../../Common/Components/Footer2'
 
 
 function Messages() {
@@ -33,6 +34,7 @@ function Messages() {
           }
         </div>
       </div>
+      <Footer2/>
     </>
   )
 }

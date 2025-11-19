@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import DoctorHeader from "./DoctorHeader";
+import Footer2 from "../Common/Components/Footer2";
 
 
 
@@ -63,6 +64,7 @@ function Doctorcontact() {
         </Button>
       </form>
     </Box>
+    <Footer2/>
     </>
   );
 }

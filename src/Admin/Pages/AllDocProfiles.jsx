@@ -7,6 +7,7 @@ import {
 } from "react-icons/fa";
 import AdminHeader from "../Components/Adminheader";
 import AdminSidebar from "../Components/AdminSidebar";
+import Footer2 from "../../Common/Components/Footer2";
 
 function AllDocProfiles() {
   const [search, setSearch] = useState("");
@@ -122,6 +123,7 @@ function AllDocProfiles() {
           </div>
         </div>
       </div>
+      <Footer2/>
     </>
   );
 }

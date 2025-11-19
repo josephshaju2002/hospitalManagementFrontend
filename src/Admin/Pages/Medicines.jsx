@@ -1,6 +1,7 @@
 import React from "react";
 import AdminHeader from "../Components/Adminheader";
 import AdminSidebar from "../Components/AdminSidebar";
+import Footer2 from "../../Common/Components/Footer2";
 
 function Medicines() {
   return (
@@ -303,6 +304,7 @@ function Medicines() {
           </div>
         </div>
       </div>
+      <Footer2/>
     </>
   );
 }

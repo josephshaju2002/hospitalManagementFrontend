@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaUserMd, FaEdit, FaCalendarAlt, FaSave } from "react-icons/fa";
 import DoctorHeader from "./DoctorHeader";
+import Footer2 from "../Common/Components/Footer2";
 
 export default function DoctorProfile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -131,6 +132,8 @@ export default function DoctorProfile() {
         </div>
       </div>
     </div>
+
+    <Footer2/>
     </>
   );
 }

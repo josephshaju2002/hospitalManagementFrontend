@@ -12,7 +12,7 @@ function AdminHeader() {
             <h1 className='font-bold text-2xl ms-2 md:hidden'>MEDIPULSE</h1>
         </div>
         {/* title */}
-        <div className='md:flex justify-center items-center hidden'>
+        <div className='md:flex justify-center items-center hidden'>  
             <h1 className='text-3xl font-bold'>MEDIPULSE</h1>
 
         </div>
@@ -21,7 +21,7 @@ function AdminHeader() {
             <Link to={"/login"}><button className='flex justify-between gap-2 items-center border border-black rounded px-3 py-2 ms-3 hover:bg-black hover:text-white'><FaPowerOff /> Logout</button></Link>
 
         </div>
-        <div className='md:hidden flex justify-end'>
+        <div className='md:hidden flex justify-end col-span-3'>
           <Link to={"/login"}><button className='flex justify-between gap-2 items-center border border-black rounded px-3 py-2 ms-3 hover:bg-black hover:text-white'><FaPowerOff /> Logout</button></Link>
         </div>
       </div>

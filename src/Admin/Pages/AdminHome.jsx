@@ -4,6 +4,7 @@ import AdminSidebar from '../Components/AdminSidebar'
 import { FaBook } from 'react-icons/fa'
 import { FaUsers } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
+import Footer2 from '../../Common/Components/Footer2';
 
 function AdminHome() {
   return (
@@ -50,6 +51,7 @@ function AdminHome() {
           </div>
         </div>
       <AdminSidebar/>
+      <Footer2/>
     </>
   )
 }

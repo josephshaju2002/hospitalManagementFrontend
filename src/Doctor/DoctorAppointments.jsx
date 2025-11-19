@@ -2,6 +2,7 @@ import React from "react";
 import { FaUser, FaCalendarAlt, FaClock } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import DoctorHeader from "./DoctorHeader";
+import Footer2 from "../Common/Components/Footer2";
 
 const doctorAppointments = [
   {
@@ -72,6 +73,8 @@ function DoctorAppointments() {
         ))}
       </div>
     </div>
+
+    <Footer2/>
     </>
   );
 }
