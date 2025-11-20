@@ -100,13 +100,13 @@ function Auth({ register }) {
                     className="bg-white p-2 w-full rounded placeholder-gray-500 text-black"
                   />
                   {pass ? (
-                    <FaRegEyeSlash
+                    <FaRegEye
                       onClick={() => setPass(!pass)}
                       className="text-gray-500 cursor-pointer"
                       style={{ marginLeft: "-30px" }}
                     />
                   ) : (
-                    <FaRegEye
+                    <FaRegEyeSlash
                       onClick={() => setPass(!pass)}
                       className="text-gray-500 cursor-pointer"
                       style={{ marginLeft: "-30px" }}
