@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { FaInstagram } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { FaFacebookSquare } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { TiThMenu } from "react-icons/ti";
 import { IoPersonOutline } from "react-icons/io5";
@@ -11,40 +8,39 @@ function DoctorHeader() {
   const [listStatus, setlistStatus] = useState(false);
   return (
     <>
-      <div className="grid grid-cols-3 p-3">
+      <div className="grid grid-cols-3 p-3 bg-[#FAF7FF]">
         {/* logo */}
         <div className="flex items-center">
           <img
             width={"50px"}
             height={"50px"}
-            src="https://static.vecteezy.com/system/resources/thumbnails/002/610/084/small/cross-symbol-healthcare-medical-and-hospital-pictogram-silhouette-style-icon-free-vector.jpg"
+            src="https://icons.iconarchive.com/icons/graphicloads/100-flat-2/256/hospital-bed-icon.png"
             alt=""
           />
-          <h1 className="font-bold text-2xl ms-2 md:hidden">MEDIPULSE</h1>
+          <h1 className="font-bold text-2xl ms-2 md:hidden text-[#5E35B1]">MEDIPULSE</h1>
         </div>
         {/* title */}
         <div className="md:flex justify-center items-center hidden">
-          <h1 className="text-3xl font-bold">MEDIPULSE</h1>
+          <h1 className="text-3xl font-bold text-[#7E57C2]">MEDIPULSE</h1>
         </div>
-        {/* logo */}
-        <div className="md:flex justify-end items-center hidden">
-          <FaInstagram className="me-3 text-2xl" />
-          <FaXTwitter className="me-3 text-2xl" />
-          <FaFacebookSquare className="me-3 text-2xl" />
+        {/* social + login */}
+        <div className="md:flex justify-end items-center hidden text-[#1E142F]">
+          
           <Link to={"/login"}>
-            <button className="flex justify-between gap-2 items-center border border-black rounded px-3 py-2 ms-3 hover:bg-black hover:text-white">
+            <button className="flex justify-between gap-2 items-center border border-[#7E57C2] rounded px-3 py-2 ms-3 hover:bg-[#7E57C2] hover:text-white transition">
               <IoPersonOutline /> Login
             </button>
           </Link>
         </div>
       </div>
-      <nav className="w-full bg-gray-900 p-5 text-white">
+
+      <nav className="w-full bg-[#7E57C2] p-5 text-white">
         <div className="flex justify-between items-center md:hidden">
           <button onClick={() => setlistStatus(!listStatus)}>
-            <TiThMenu className="2xl" />
+            <TiThMenu className="2xl text-white" />
           </button>
           <Link to={"/login"}>
-            <button className="flex justify-between items-center gap-2 border border-white rounded px-3 py-2 ms-3 hover:bg-white hover:text-black">
+            <button className="flex justify-between items-center gap-2 border border-white rounded px-3 py-2 ms-3 hover:bg-white hover:text-[#7E57C2] transition">
               <IoPersonOutline /> Login
             </button>
           </Link>
@@ -52,25 +48,23 @@ function DoctorHeader() {
         <ul
           className={
             listStatus
-              ? "flex flex-col"
+              ? "flex flex-col bg-[#7E57C2] text-white p-3 rounded-lg"
               : "md:flex justify-center items-center hidden"
           }
         >
           <li className="md:mx-4 mt-3 md:mt-0">
-            <Link to={"/doctorprofile"}>Profile</Link>
+            <Link to={"/doctorprofile"} className="hover:text-[#D1C4E9]">Profile</Link>
           </li>
           <li className="md:mx-4 mt-3 md:mt-0">
-            <Link to={"/doctorappo"}>Appointments</Link>
+            <Link to={"/doctorappo"} className="hover:text-[#D1C4E9]">Appointments</Link>
           </li>
           <li className="md:mx-4 mt-3 md:mt-0">
-            <Link to={"/patientcard"}>PatientCards</Link>
-          </li>
-          <li className="md:mx-4 mt-3 md:mt-0">
-            <Link to={"/doctorcontact"}>Contact</Link>
+            <Link to={"/doctorcontact"} className="hover:text-[#D1C4E9]">Contact</Link>
           </li>
         </ul>
       </nav>
-      <div className="w-full bg-blue-600 py-2 overflow-hidden">
+
+      <div className="w-full bg-[#D1C4E9] py-2 overflow-hidden">
         <motion.h2
           initial={{ x: "100%" }}
           animate={{ x: "-110%" }}
@@ -80,11 +74,9 @@ function DoctorHeader() {
             repeatType: "loop",
             ease: "linear",
           }}
-          className="text-xl font-semibold whitespace-nowrap text-white px-5"
+          className="text-xl font-semibold whitespace-nowrap text-[#1E142F] px-5"
         >
-          Reliable patient care begins with trust, compassion, and timely
-          support from skilled medical professionals. Every appointment offers
-          an opportunity to ensure comfort and clarity.
+          Reliable patient care begins with trust, compassion, and timely support from skilled medical professionals. Every appointment offers an opportunity to ensure comfort and clarity.
         </motion.h2>
       </div>
     </>
