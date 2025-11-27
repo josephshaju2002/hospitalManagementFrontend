@@ -23,7 +23,6 @@ import Cart from "./Patient/Pages/Cart"
 import Doctorcontact from "./Doctor/Doctorcontact"
 import AdminHome from "./Admin/Pages/AdminHome"
 import AdminSettings from "./Admin/Pages/AdminSettings.jsx"
-import LandingPage from "./Common/Pages/LandingPage.jsx"
 
 
 
@@ -48,7 +47,6 @@ function App() {
         <Route path={'/about'} element={<Aboutus />}/>
         <Route path={'/login'} element={<Auth />}/>
         <Route path={'/register'} element={<Auth register />}/>
-        <Route path={'/landing'} element={<LandingPage />}/>
         <Route path={'*'} element={<Pnf/>}/>
 
         {/* patient */}

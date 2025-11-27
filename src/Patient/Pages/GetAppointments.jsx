@@ -46,126 +46,113 @@ function GetAppointments() {
 
   return (
     <>
-    <Header/>
+      <Header />
 
-
-    <div className="min-h-screen bg-gray-100 p-5 md:p-10">
-      {/* Header */}
-      <div className="bg-blue-600 text-white p-8 rounded-xl shadow-lg mb-10 text-center">
-        <h1 className="text-4xl font-bold flex items-center justify-center gap-3">
-          <FaUserMd /> Book an Appointment
-        </h1>
-        <p className="mt-2 text-lg">
-          Choose a doctor and schedule your appointment easily.
-        </p>
-      </div>
-
-      {/* Filters */}
-      <div className="bg-white p-6 rounded-xl shadow-lg mb-8">
-        <h2 className="text-xl font-semibold mb-4">Search Filters</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-          {/* Specialization */}
-          <div>
-            <label className="block font-medium mb-2">Specialization</label>
-            <select
-              className="w-full p-3 border rounded-lg"
-              value={specialization}
-              onChange={(e) => setSpecialization(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="Cardiologist">Cardiologist</option>
-              <option value="Dermatologist">Dermatologist</option>
-              <option value="Neurologist">Neurologist</option>
-            </select>
-          </div>
-
-          {/* Date */}
-          <div>
-            <label className="block font-medium mb-2">Choose Date</label>
-            <div className="relative">
-              <input
-                type="date"
-                className="w-full p-3 border rounded-lg"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-              <FaCalendarAlt className="absolute right-3 top-4 text-gray-500" />
-            </div>
-          </div>
-
-          {/* Search Button */}
-          <div className="flex items-end">
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg flex items-center justify-center gap-2 shadow">
-              <FaSearch /> Search
-            </button>
-          </div>
+      <div className="min-h-screen bg-[#FAF7FF] p-5 md:p-10 text-[#1E142F]">
+        
+        {/* Header */}
+        <div className="bg-[#7E57C2] text-white p-8 rounded-xl shadow-lg mb-10 text-center">
+          <h1 className="text-4xl font-bold flex items-center justify-center gap-3">
+            <FaUserMd /> Book an Appointment
+          </h1>
+          <p className="mt-2 text-lg">Choose a doctor and schedule your appointment easily.</p>
         </div>
-      </div>
 
-      {/* Doctors List */}
-      <h2 className="text-2xl font-bold mb-4">Available Doctors</h2>
+        {/* Filters */}
+        <div className="bg-[#EDE7F6] p-6 rounded-xl shadow-lg mb-8">
+          <h2 className="text-xl font-semibold mb-4">Search Filters</h2>
 
-      {filteredDoctors.length === 0 ? (
-        <p className="text-gray-600">No doctors available</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {filteredDoctors.map((doc) => (
-            <div
-              key={doc.id}
-              className="bg-white p-6 rounded-xl shadow hover:shadow-xl transition duration-300"
-            >
-              <div className="flex flex-col items-center">
-                <img
-                  src={doc.image}
-                  alt="doctor"
-                  className="w-24 h-24 rounded-full"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            
+            {/* Specialization */}
+            <div>
+              <label className="block font-medium mb-2">Specialization</label>
+              <select
+                className="w-full p-3 border border-[#9575CD] rounded-lg bg-white"
+                value={specialization}
+                onChange={(e) => setSpecialization(e.target.value)}
+              >
+                <option value="">All</option>
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="Neurologist">Neurologist</option>
+              </select>
+            </div>
+
+            {/* Date */}
+            <div>
+              <label className="block font-medium mb-2">Choose Date</label>
+              <div className="relative">
+                <input
+                  type="date"
+                  className="w-full p-3 border border-[#9575CD] rounded-lg bg-white"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                 />
-                <h3 className="text-xl font-semibold mt-3">{doc.name}</h3>
-                <p className="text-blue-600 font-semibold">{doc.specialization}</p>
-                <p className="text-gray-600 text-sm mt-1">
-                  Experience: {doc.experience}
-                </p>
-
-                {/* Available Days */}
-                <div className="mt-3">
-                  <p className="font-medium mb-1 text-gray-700">
-                    Available Days:
-                  </p>
-                  <div className="flex gap-2">
-                    {doc.availableDays.map((d, idx) => (
-                      <span
-                        key={idx}
-                        className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm"
-                      >
-                        {d}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Book Button */}
-                <button className="w-full mt-5 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold shadow">
-                  Book Appointment
-                </button>
+                <FaCalendarAlt className="absolute right-3 top-4 text-gray-500" />
               </div>
             </div>
-          ))}
+
+            {/* Search Button */}
+            <div className="flex items-end">
+              <button className="w-full bg-[#7E57C2] hover:bg-[#5E35B1] text-white p-3 rounded-lg flex items-center justify-center gap-2 shadow">
+                <FaSearch /> Search
+              </button>
+            </div>
+          </div>
         </div>
-      )}
-    </div>
 
+        {/* Doctors List */}
+        <h2 className="text-2xl font-bold mb-4">Available Doctors</h2>
 
+        {filteredDoctors.length === 0 ? (
+          <p className="text-gray-600">No doctors available</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {filteredDoctors.map((doc) => (
+              <div
+                key={doc.id}
+                className="bg-[#FFFFFF] p-6 rounded-xl shadow hover:shadow-2xl transition duration-300 border border-[#EDE7F6]"
+              >
+                <div className="flex flex-col items-center">
+                  <img
+                    src={doc.image}
+                    alt="doctor"
+                    className="w-24 h-24 rounded-full"
+                  />
+                  <h3 className="text-xl font-semibold mt-3">{doc.name}</h3>
+                  <p className="text-[#7E57C2] font-semibold">{doc.specialization}</p>
+                  <p className="text-gray-600 text-sm mt-1">Experience: {doc.experience}</p>
 
-    <Footer/>
+                  {/* Available Days */}
+                  <div className="mt-3">
+                    <p className="font-medium mb-1 text-gray-700">Available Days:</p>
+                    <div className="flex gap-2">
+                      {doc.availableDays.map((d, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-[#D1C4E9] text-[#5E35B1] px-3 py-1 rounded-full text-sm"
+                        >
+                          {d}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Book Button */}
+                  <button className="w-full mt-5 bg-[#7E57C2] hover:bg-[#5E35B1] text-white py-2 rounded-lg font-semibold shadow">
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <Footer />
     </>
   );
 }
 
 export default GetAppointments;
-
-
-
-
-
