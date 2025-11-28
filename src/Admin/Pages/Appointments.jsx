@@ -33,6 +33,7 @@ function Appointments() {
       status: "Cancelled",
     },
   ];
+
   return (
     <>
       <AdminHeader />
@@ -41,33 +42,33 @@ function Appointments() {
           <AdminSidebar />
         </div>
 
-        <div className="min-h-screen bg-gray-100 p-6 md:p-10">
+        <div className="min-h-screen bg-[#FAF7FF] p-6 md:p-10">
           {/* Header */}
-          <div className="bg-purple-700 text-white p-7 rounded-xl shadow mb-10 text-center">
+          <div className="bg-[#7E57C2] text-white p-7 rounded-xl shadow mb-10 text-center">
             <h1 className="text-3xl md:text-4xl font-bold">All Appointments</h1>
-            <p className="mt-2 text-lg">
-              View all patient-doctor appointments.
-            </p>
+            <p className="mt-2 text-lg">View all patient-doctor appointments.</p>
           </div>
 
-          <div className="max-w-7xl mx-auto bg-white p-4 md:p-6 rounded-xl shadow">
+          <div className="max-w-7xl mx-auto bg-[#EDE7F6] p-4 md:p-6 rounded-xl shadow">
             {/* Search */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-5">
-              <div className="flex items-center bg-gray-100 px-3 py-2 rounded-lg w-full md:w-72">
-                <FaSearch className="text-gray-500" />
+              <div className="flex items-center bg-[#D1C4E9] px-3 py-2 rounded-lg w-full md:w-72">
+                <FaSearch className="text-[#5E35B1]" />
                 <input
                   type="text"
                   placeholder="Search patient or doctor..."
-                  className="bg-transparent ml-2 outline-none w-full text-sm"
+                  className="bg-transparent ml-2 outline-none w-full text-sm text-[#1E142F]"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
             </div>
 
             {/* Table */}
             <div className="overflow-x-auto">
-              <table className="min-w-max w-full border-collapse">
+              <table className="min-w-max w-full border-collapse text-[#1E142F]">
                 <thead>
-                  <tr className="bg-gray-200 text-gray-700 text-xs md:text-sm">
+                  <tr className="bg-[#D1C4E9] text-[#5E35B1] text-xs md:text-sm">
                     <th className="p-3 text-left">Patient</th>
                     <th className="p-3 text-left">Doctor</th>
                     <th className="p-3 text-left">Date</th>
@@ -81,7 +82,7 @@ function Appointments() {
                   {appointments.map((a) => (
                     <tr
                       key={a.id}
-                      className="border-b hover:bg-gray-50 transition text-gray-800"
+                      className="border-b hover:bg-[#FAF7FF] transition"
                     >
                       {/* Patient */}
                       <td className="p-3">
@@ -102,7 +103,7 @@ function Appointments() {
                       {/* Date */}
                       <td className="p-3 min-w-[90px]">
                         <div className="flex items-center gap-2">
-                          <FaCalendarAlt className="text-purple-600 text-base md:text-lg" />
+                          <FaCalendarAlt className="text-[#9575CD] text-base md:text-lg" />
                           <span>{a.date}</span>
                         </div>
                       </td>
@@ -139,11 +140,9 @@ function Appointments() {
           </div>
         </div>
       </div>
-      <Footer2/>
+      <Footer2 />
     </>
   );
 }
 
 export default Appointments;
-
-// Appointments

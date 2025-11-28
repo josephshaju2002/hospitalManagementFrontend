@@ -1,61 +1,83 @@
-import React from 'react'
-import AdminHeader from '../Components/Adminheader'
-import AdminSidebar from '../Components/AdminSidebar'
-import { FaBook } from 'react-icons/fa'
+import React from "react";
+import AdminHeader from "../Components/Adminheader";
+import AdminSidebar from "../Components/AdminSidebar";
+import { FaBook } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
-import Footer2 from '../../Common/Components/Footer2';
+import Footer2 from "../../Common/Components/Footer2";
 
 function AdminHome() {
   return (
     <>
-      <AdminHeader/>
-       <div className='p-4'>
-          <div className="md:grid grid-cols-3 text-white ">
-            <div className="px-5">
-              <div className="grid grid-cols-[1fr_3fr] bg-blue-700 p-4 rounded">
+      <AdminHeader />
+
+      <div className="md:grid grid-cols-[1fr_4fr] bg-[#FAF7FF] min-h-screen">
+        <div>
+          <AdminSidebar />
+        </div>
+
+        <div className="p-6">
+          <div className="bg-gradient-to-r from-[#7E57C2] to-[#9575CD] text-white p-6 rounded-xl mb-8 shadow-lg flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold">Welcome Admin</h1>
+              <p className="text-sm opacity-90 mt-1">
+                Manage doctors, users, and appointments effortlessly.
+              </p>
+            </div>
+
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3209/3209265.png"
+              alt="Dashboard"
+              className="w-24 drop-shadow-lg hidden md:block"
+            />
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3 md:gap-6 text-white">
+            {/* Card 1 */}
+            <div className="transform hover:scale-105 transition-all duration-300">
+              <div className="grid grid-cols-[1fr_3fr] bg-blue-700 p-5 rounded-2xl shadow-lg">
                 <div className="flex justify-center items-center">
-                <FaBook className='text-3xl'/>
+                  <FaBook className="text-4xl" />
                 </div>
                 <div>
-                  <h1>Total No:of Appointments : </h1><span className='text-xl'>85</span>
-                  
+                  <h1 className="font-semibold">Total Appointments:</h1>
+                  <span className="text-2xl font-bold">85</span>
                 </div>
               </div>
-              
             </div>
-            <div className="px-5">
-              <div className="grid grid-cols-[1fr_3fr] bg-green-700 p-4 rounded">
+
+            {/* Card 2 */}
+            <div className="transform hover:scale-105 transition-all duration-300">
+              <div className="grid grid-cols-[1fr_3fr] bg-green-700 p-5 rounded-2xl shadow-lg">
                 <div className="flex justify-center items-center">
-                <FaUsers className='text-3xl'/>
-                </div>
-                <div >
-                  <h1>Total No:of Users : </h1><span className='text-xl'>85</span>
-                  
-                </div>
-              </div>
-              
-            </div>
-            <div className="px-5">
-              <div className="grid grid-cols-[1fr_3fr] bg-yellow-700 p-4 rounded">
-                <div className="flex justify-center items-center">
-                <FaUserDoctor className='text-3xl'/>
+                  <FaUsers className="text-4xl" />
                 </div>
                 <div>
-                  <h1>Total No:of Doctors : </h1><span className='text-xl'>85</span>
-                  
+                  <h1 className="font-semibold">Total Users:</h1>
+                  <span className="text-2xl font-bold">85</span>
                 </div>
               </div>
-              
+            </div>
+
+            {/* Card 3 */}
+            <div className="transform hover:scale-105 transition-all duration-300">
+              <div className="grid grid-cols-[1fr_3fr] bg-yellow-700 p-5 rounded-2xl shadow-lg">
+                <div className="flex justify-center items-center">
+                  <FaUserDoctor className="text-4xl" />
+                </div>
+                <div>
+                  <h1 className="font-semibold">Total Doctors:</h1>
+                  <span className="text-2xl font-bold">85</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      <AdminSidebar/>
-      <Footer2/>
+      </div>
+
+      <Footer2 />
     </>
-  )
+  );
 }
 
-export default AdminHome
-
-
+export default AdminHome;
