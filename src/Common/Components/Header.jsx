@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { GiHospitalCross } from "react-icons/gi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
 
 const pages = [
@@ -28,8 +28,8 @@ const pages = [
 
 const settings = [
   { name: "Profile", path: "/profile" },
-  { name: "My Appointments", path: "/myappo" },
-  { name: "Buy Medicines", path: "/buymed" },
+  // { name: "My Appointments", path: "/myappo" },
+  // { name: "Buy Medicines", path: "/buymed" },
   { name: "Logout", path: "/login" },
 ];
 
@@ -145,7 +145,7 @@ function Header() {
           </Box>
 
           {/* Avatar / Settings */}
-          <Box sx={{ flexGrow: 0 }}>
+          {/* <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="User Menu">
               <IconButton onClick={handleOpenUserMenu}>
                 <Avatar alt="User" />
@@ -168,7 +168,15 @@ function Header() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box> */}
+
+          <div>
+            <Link to={"/login"}>
+            <button className="p-3 rounded" style={{ color: "#9575CD",backgroundColor:"white" }}>LOGIN</button>
+            </Link>
+            
+          </div>
+          
         </Toolbar>
       </Container>
     </AppBar>

@@ -158,15 +158,63 @@ function Home() {
           </Link>
         </div>
 
-        {/* TESTIMONIALS */}
-        <div className="mt-20  mx-10">
-          <h2 className="text-3xl font-bold text-center text-[#7E57C2] mb-10">
-            What Our Users Say
-          </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-4 md:px-0 mb-10 mx-10">
+          {/* Testimonial 1 */}
+          <div className="bg-[#EDE7F6] p-6 rounded-2xl shadow-lg">
+            <p className="text-[#1E142F] text-lg">
+              “Medipulse has completely transformed how I manage my
+              appointments. The interface is clean, fast, and incredibly easy to
+              use!”
+            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <img
+                src="https://i.pravatar.cc/80?img=12"
+                className="w-12 h-12 rounded-full"
+                alt="user"
+              />
+              <div>
+                <h4 className="font-bold text-[#7E57C2]">Aarav Nair</h4>
+                <p className="text-sm text-[#5E35B1]">Verified User</p>
+              </div>
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-4 md:px-0">
-            {/* Reuse existing testimonials */}
-            {/* I didn’t change any content — only color theme */}
+          {/* Testimonial 2 */}
+          <div className="bg-[#EDE7F6] p-6 rounded-2xl shadow-lg">
+            <p className="text-[#1E142F] text-lg">
+              “The platform really helps me stay organized with my medicines and
+              doctor visits. Smooth performance and great UI!”
+            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <img
+                src="https://i.pravatar.cc/80?img=5"
+                className="w-12 h-12 rounded-full"
+                alt="user"
+              />
+              <div>
+                <h4 className="font-bold text-[#7E57C2]">Sahana R</h4>
+                <p className="text-sm text-[#5E35B1]">Medipulse Member</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Testimonial 3 */}
+          <div className="bg-[#EDE7F6] p-6 rounded-2xl shadow-lg">
+            <p className="text-[#1E142F] text-lg">
+              “As a student, this app helps me track health records easily. The
+              reminders are super helpful. Highly recommended!”
+            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <img
+                src="https://i.pravatar.cc/80?img=30"
+                className="w-12 h-12 rounded-full"
+                alt="user"
+              />
+              <div>
+                <h4 className="font-bold text-[#7E57C2]">Rithik Raj</h4>
+                <p className="text-sm text-[#5E35B1]">Daily User</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaEdit } from "react-icons/fa";
+// import { FaEdit } from "react-icons/fa";
 import AdminHeader from '../Components/Adminheader';
 import AdminSidebar from '../Components/AdminSidebar';
 import Footer2 from '../../Common/Components/Footer2';

@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
+import { loginAPI, registerAPI } from "../../services/allAPI";
+import { toast } from "react-toastify";
 
 function Auth({ register }) {
   const [pass, setPass] = useState(false);
+
+  const navigate = useNavigate()
 
   const [useDetails, setUserDetails] = useState({
     username: "",
@@ -18,10 +22,77 @@ function Auth({ register }) {
   const handleRegister = async () => {
     const { username, email, password } = useDetails;
     if (!username || !email || !password) {
-      alert("Fill the form completely");
+      toast.info("Fill the form completely");
     } else {
-      // const result = await registerAPI(useDetails)
+      const result = await registerAPI(useDetails)
       console.log(result);
+      if(result.status == 200){
+        toast.success("Registered Successfully")
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        })
+        navigate("/login")
+      }else if(result.status == 404){
+        toast.warning(result.response.data)
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        })
+      }else{
+        toast.error("Something Went Wrong")
+      }
+    }
+  };
+
+  const handleLogin = async () => {
+    const { email, password } = useDetails;
+    if (!email || !password) {
+      toast.info("Fill the form completely");
+    } else {
+      const result = await loginAPI(useDetails);
+      console.log(result);
+      if (result.status == 200) {
+        sessionStorage.setItem(
+          "existingUser",
+          JSON.stringify(result.data.existingUser)
+        );
+        sessionStorage.setItem("token", result.data.token);
+
+        toast.success("Login Successfull");
+        // setAuthorizedUser(true)
+        if (result.data.existingUser.role == "admin") {
+          navigate("/adminhome");
+        } else if(result.data.existingUser.role == "doctor") {
+          navigate("/doctorprofile");
+        }else{
+          navigate("/");
+        }
+
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        });
+      } else if (result.status == 404) {
+        toast.warning(result.response.data);
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        });
+      } else if (result.status == 401) {
+        toast.warning(result.response.data);
+      } else {
+        toast.error("Something Went Wrong");
+        setUserDetails({
+          username: "",
+          email: "",
+          password: "",
+        });
+      }
     }
   };
 
@@ -131,6 +202,7 @@ function Auth({ register }) {
                   </button>
                 ) : (
                   <button
+                  onClick={handleLogin}
                     type="button"
                     className="bg-green-700 p-2 w-full rounded"
                   >
