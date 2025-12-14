@@ -3,11 +3,14 @@ import { useParams } from "react-router-dom";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
 import { getSingleMedicineAPI } from "../../services/allAPI";
+import { useCart } from "../../context/CartContext";
+import { toast } from "react-toastify";
 
 function ViewMedicines() {
   const { id } = useParams();
   const [medicine, setMedicine] = useState(null);
   const [token, setToken] = useState("");
+  const { addToCart } = useCart();
 
   const fetchMedicine = async (userToken) => {
     const reqHeader = {
@@ -48,21 +51,23 @@ function ViewMedicines() {
             alt={medicine.name}
             className="h-[300px] w-full object-contain rounded-lg shadow bg-[#EDE7F6]"
           />
-
         </div>
 
         {/* Details */}
         <div>
-          <h1 className="text-3xl font-bold text-[#5E35B1]">
-            {medicine.name}
-          </h1>
+          <h1 className="text-3xl font-bold text-[#5E35B1]">{medicine.name}</h1>
 
           <p className="text-2xl text-red-500 font-semibold mt-2">
             ₹ {medicine.price}
           </p>
 
-        
-           <button className="bg-[#7E57C2] text-white rounded-lg px-5 py-3 mt-5 hover:bg-[#5E35B1]">
+          <button
+            onClick={() => {
+              addToCart(medicine);
+              toast.success("Added to cart");
+            }}
+            className="bg-[#7E57C2] text-white rounded-lg px-5 py-3 mt-5 hover:bg-[#5E35B1]"
+          >
             ADD TO CART
           </button>
         </div>
