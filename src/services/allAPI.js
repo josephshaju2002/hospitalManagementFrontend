@@ -17,9 +17,16 @@ export const getFeaturedMedicinesAPI = async () => {
 };
 
 // get all medicines
-export const getAllCommonMedicinesAPI = async () => {
-  return await commonAPI("GET", `${SERVERURL}/getall-medicines`);
+export const getAllCommonMedicinesAPI = async (reqHeader) => {
+  return await commonAPI("GET", `${SERVERURL}/getall-medicines`,{},reqHeader);
 };
+
+// get single medicine
+
+export const getSingleMedicineAPI = (id,reqHeader) => {
+  return commonAPI("GET", `${SERVERURL}/medicine/${id}`,{},reqHeader);
+};
+
 
 
 
