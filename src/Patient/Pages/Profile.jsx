@@ -164,9 +164,9 @@ export default function ProfilePage() {
                   />
                 </div>
 
-                {/* Address */}
+                {/* Bio */}
                 <div>
-                  <label className="block font-semibold mb-1 text-purple-900">Address</label>
+                  <label className="block font-semibold mb-1 text-purple-900">Bio</label>
                   <input
                     type="text"
                     className="w-full p-3 border rounded-lg"
@@ -174,7 +174,7 @@ export default function ProfilePage() {
                       borderColor: "#D1C4E9",
                       backgroundColor: "#FFFFFF"
                     }}
-                    placeholder="Your address"
+                    placeholder="Your Bio"
                   />
                 </div>
 
