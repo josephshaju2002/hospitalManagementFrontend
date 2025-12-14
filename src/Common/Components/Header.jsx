@@ -14,6 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { GiHospitalCross } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const pages = [
   { name: "Home", path: "/" },
@@ -38,11 +40,21 @@ function Header() {
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [token,setToken] = useState("")
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
+
+  useEffect(()=>{
+    if(sessionStorage.getItem("token")){
+      setToken(sessionStorage.getItem("token"))
+    }
+  },[])
+
+  // console.log(token);
+  
 
   return (
     <AppBar
@@ -145,7 +157,8 @@ function Header() {
           </Box>
 
           {/* Avatar / Settings */}
-          {/* <Box sx={{ flexGrow: 0 }}>
+
+          {token && <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="User Menu">
               <IconButton onClick={handleOpenUserMenu}>
                 <Avatar alt="User" />
@@ -168,14 +181,14 @@ function Header() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box> */}
+          </Box>}
 
-          <div>
+          {!token &&<div>
             <Link to={"/login"}>
             <button className="p-3 rounded" style={{ color: "#9575CD",backgroundColor:"white" }}>LOGIN</button>
             </Link>
             
-          </div>
+          </div>}
           
         </Toolbar>
       </Container>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUser, FaEnvelope, FaCamera, FaLock } from "react-icons/fa";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
@@ -6,6 +6,19 @@ import Footer from "../../Common/Components/Footer";
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("details");
 
+  const [username,setUsername] = useState("")
+  const [bio,setBio] = useState("")
+  console.log(username);
+
+  useEffect(()=>{
+    if (sessionStorage.getItem("existingUser")) {
+      const name = JSON.parse(sessionStorage.getItem("existingUser"));
+      setUsername(name.username);
+      setBio(name.bio)
+}
+
+  },[])
+  
   return (
     <>
       <Header />
@@ -18,10 +31,10 @@ export default function ProfilePage() {
           style={{ backgroundColor: "#7E57C2" }}
         >
           <h1 className="text-3xl md:text-4xl font-bold flex justify-center items-center gap-3">
-            <FaUser /> My Profile
+            <FaUser /> {username}
           </h1>
           <p className="mt-2 text-lg text-purple-100">
-            Manage your account settings and personal info.
+            {bio}
           </p>
         </div>
 
