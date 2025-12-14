@@ -1,9 +1,97 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeader from "../Components/Adminheader";
 import AdminSidebar from "../Components/AdminSidebar";
 import Footer2 from "../../Common/Components/Footer2";
+import { toast } from "react-toastify";
+import { addMedicineAPI, deleteMedicineAPI, getAllMedicinesAPI, updateMedicineAPI } from "../../services/allAPI";
 
 function Medicines() {
+  const [medicines, setMedicines] = useState([]);
+ const [formData, setFormData] = useState({
+  name: "",
+  price: "",
+  imageUrl: "",
+});
+
+  const [editData, setEditData] = useState(null);
+
+  const token = sessionStorage.getItem("token");
+  const reqHeader = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+
+  // 🔹 Fetch medicines
+  const fetchMedicines = async () => {
+    try {
+      const res = await getAllMedicinesAPI(reqHeader);
+      if (res.status === 200) {
+        setMedicines(res.data);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to fetch medicines");
+    }
+  };
+
+  useEffect(() => {
+    fetchMedicines();
+  }, []);
+
+  // 🔹 Add medicine
+  const handleAddMedicine = async () => {
+    const { name, price, imageUrl } = formData;
+    if (!name || !price || !imageUrl) {
+      toast.warning("Please fill all fields");
+      return;
+    }
+
+    try {
+      const res = await addMedicineAPI(formData, reqHeader);
+      if (res.status === 200 || res.status === 201) {
+        toast.success("Medicine added successfully");
+        setFormData({ name: "", price: "", imageUrl: "" });
+        fetchMedicines();
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to add medicine");
+    }
+  };
+
+  // 🔹 Delete medicine
+  const handleDeleteMedicine = async (id) => {
+    try {
+      const res = await deleteMedicineAPI(id, reqHeader);
+      if (res.status === 200) {
+        toast.success("Medicine deleted");
+        fetchMedicines();
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Delete failed");
+    }
+  };
+
+  // 🔹 Update medicine
+  const handleUpdateMedicine = async () => {
+    try {
+      const res = await updateMedicineAPI(
+        editData._id,
+        editData,
+        reqHeader
+      );
+      if (res.status === 200) {
+        toast.success("Medicine updated");
+        setEditData(null);
+        fetchMedicines();
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Update failed");
+    }
+  };
+
   return (
     <>
       <AdminHeader />
@@ -24,20 +112,35 @@ function Medicines() {
               <input
                 type="text"
                 placeholder="Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="border px-3 py-2 rounded w-full md:w-48 border-[#9575CD] bg-[#FAF7FF]"
               />
               <input
                 type="number"
                 placeholder="Price"
+                value={formData.price}
+                onChange={(e) =>
+                  setFormData({ ...formData, price: e.target.value })
+                }
                 className="border px-3 py-2 rounded w-full md:w-40 border-[#9575CD] bg-[#FAF7FF]"
               />
               <input
                 type="text"
                 placeholder="Image URL"
+                value={formData.imageUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, imageUrl: e.target.value })
+                }
                 className="border px-3 py-2 rounded w-full md:w-64 border-[#9575CD] bg-[#FAF7FF]"
               />
 
-              <button className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">
+              <button
+                onClick={handleAddMedicine}
+                className="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700"
+              >
                 Add
               </button>
             </div>
@@ -45,88 +148,33 @@ function Medicines() {
 
           {/* Medicine Cards */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[
-              {
-                name: "Cough Syrup",
-                price: "₹ 120",
-                img: "https://images.apollo247.in/pub/media/catalog/product/A/L/ALK0009_1_1.jpg?tr=q-80,f-webp,w-400,dpr-3,c-at_max%20400w",
-              },
-              {
-                name: "Paracetamol",
-                price: "₹ 45",
-                img: "https://www.paxhealthcare.com/wp-content/uploads/2017/01/PELCIN-650-1.jpg",
-              },
-              {
-                name: "Vitamin D Tablets",
-                price: "₹ 180",
-                img: "https://swisse.co.in/cdn/shop/products/Artboard1_7648cb2c-a56d-4bca-9f0b-1b56cf983de1_600x.jpg?v=1681495957",
-              },
-              {
-                name: "Antibiotic Capsules",
-                price: "₹ 90",
-                img: "https://5.imimg.com/data5/SELLER/Default/2022/3/KS/NJ/TH/26747562/amoxycillin-capsules-500x500.png",
-              },
-              {
-                name: "Pain Relief Spray",
-                price: "₹ 160",
-                img: "https://m.media-amazon.com/images/I/61uaRmQ8RwL._AC_UF1000,1000_QL80_.jpg",
-              },
-              {
-                name: "Hand Sanitizer",
-                price: "₹ 80",
-                img: "https://images.apollo247.in/pub/media/catalog/product/a/p/apl0063-_2_.jpg?tr=q-80,f-webp,w-400,dpr-3,c-at_max%20400w",
-              },
-              {
-                name: "Allergy Relief Tablets",
-                price: "₹ 110",
-                img: "https://5.imimg.com/data5/SELLER/Default/2024/2/386950917/FQ/XN/MH/210735223/allergy-relief.jpg",
-              },
-              {
-                name: "ORS Hydration Powder",
-                price: "₹ 40",
-                img: "https://zeelabpharmacy.com/uploads/files/MW684a804f0a37f.webp",
-              },
-              {
-                name: "Antacid Syrup",
-                price: "₹ 95",
-                img: "https://ayushcare.in/cdn/shop/products/6122mKiaMhL._SL1500.jpg?v=1747143418",
-              },
-              {
-                name: "Nebulizer Machine",
-                price: "₹ 1800",
-                img: "https://m.media-amazon.com/images/I/71tvB6D7GPL.jpg",
-              },
-              {
-                name: "Bandage Roll",
-                price: "₹ 45",
-                img: "https://m.media-amazon.com/images/I/81j7N40AjBL.jpg",
-              },
-              {
-                name: "Eye Drops",
-                price: "₹ 250",
-                img: "https://himalayawellness.in/cdn/shop/products/OPHTHACARE-DROPS-10ML.jpg?v=1659002377",
-              },
-            ].map((item, index) => (
+            {medicines.map((item) => (
               <div
-                key={index}
+                key={item._id}
                 className="border p-4 rounded-xl shadow bg-[#EDE7F6] hover:shadow-lg transition border-[#D1C4E9]"
               >
                 <h3 className="font-semibold text-lg text-[#5E35B1]">
                   {item.name}
                 </h3>
-                <p className="text-[#1E142F]">{item.price}</p>
+                <p className="text-[#1E142F]">₹ {item.price}</p>
 
                 <img
-                  src={item.img}
+                  src={item.imageUrl}
                   alt={item.name}
                   className="w-full h-40 object-cover rounded mt-3"
                 />
 
                 <div className="mt-4 flex gap-3">
-                  <button className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700">
+                  <button
+                    onClick={() => handleDeleteMedicine(item._id)}
+                    className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700"
+                  >
                     Delete
                   </button>
-                  <button className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                  <button
+                    onClick={() => setEditData(item)}
+                    className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                  >
                     Edit
                   </button>
                 </div>
@@ -135,38 +183,55 @@ function Medicines() {
           </div>
 
           {/* Edit Modal */}
-          <div className="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4">
-            <div className="bg-white p-6 rounded-xl w-full max-w-md">
-              <h3 className="text-xl font-bold mb-4 text-[#5E35B1]">
-                Edit Medicine
-              </h3>
+          {editData && (
+            <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center p-4">
+              <div className="bg-white p-6 rounded-xl w-full max-w-md">
+                <h3 className="text-xl font-bold mb-4 text-[#5E35B1]">
+                  Edit Medicine
+                </h3>
 
-              <input
-                type="text"
-                placeholder="Name"
-                className="border px-3 py-2 rounded w-full mb-3 border-[#9575CD]"
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                className="border px-3 py-2 rounded w-full mb-3 border-[#9575CD]"
-              />
-              <input
-                type="text"
-                placeholder="Image URL"
-                className="border px-3 py-2 rounded w-full mb-3 border-[#9575CD]"
-              />
+                <input
+                  type="text"
+                  value={editData.name}
+                  onChange={(e) =>
+                    setEditData({ ...editData, name: e.target.value })
+                  }
+                  className="border px-3 py-2 rounded w-full mb-3 border-[#9575CD]"
+                />
+                <input
+                  type="number"
+                  value={editData.price}
+                  onChange={(e) =>
+                    setEditData({ ...editData, price: e.target.value })
+                  }
+                  className="border px-3 py-2 rounded w-full mb-3 border-[#9575CD]"
+                />
+                <input
+                  type="text"
+                  value={editData.imageUrl}
+                  onChange={(e) =>
+                    setEditData({ ...editData, imageUrl: e.target.value })
+                  }
+                  className="border px-3 py-2 rounded w-full mb-3 border-[#9575CD]"
+                />
 
-              <div className="flex justify-end gap-3 mt-4">
-                <button className="px-4 py-2 border rounded border-[#9575CD]">
-                  Cancel
-                </button>
-                <button className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700">
-                  Save
-                </button>
+                <div className="flex justify-end gap-3 mt-4">
+                  <button
+                    onClick={() => setEditData(null)}
+                    className="px-4 py-2 border rounded border-[#9575CD]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdateMedicine}
+                    className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700"
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -176,4 +241,3 @@ function Medicines() {
 }
 
 export default Medicines;
-

@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import { getFeaturedMedicinesAPI } from "../../services/allAPI";
 import { Link } from "react-router-dom";
 import { FaUserMd, FaCalendarCheck, FaPills, FaRobot } from "react-icons/fa";
 import { Card, CardContent, Typography } from "@mui/material";
 
 function Home() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await getFeaturedMedicinesAPI();
+        if (res.status === 200) {
+          setProducts(res.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <>
       <Header />
@@ -101,49 +119,21 @@ function Home() {
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {/* PRODUCT CARDS */}
-            {[
-              {
-                title: "Digital Thermometer",
-                price: "₹299",
-                img: "https://images-cdn.ubuy.co.in/689df7a1d7e03c547c034c38-digital-thermometer-for-adults-and-kids.jpg",
-              },
-              {
-                title: "Blood Pressure Monitor",
-                price: "₹1,799",
-                img: "https://images-cdn.ubuy.co.in/653f96517ef55a02027b2404-blood-pressure-monitor-upper-arm-lovia.jpg",
-              },
-              {
-                title: "Oximeter",
-                price: "₹899",
-                img: "https://m.media-amazon.com/images/I/6189MAMYiqL._AC_UF1000,1000_QL80_.jpg",
-              },
-              {
-                title: "First Aid Kit",
-                price: "₹649",
-                img: "https://protectorfiresafety.com/31636-thickbox_default/first-aid-kit-o-type.jpg",
-              },
-              {
-                title: "Glucometer",
-                price: "₹999",
-                img: "https://cdn01.pharmeasy.in/dam/products_otc/I14791/accu-chek-instant-s-glucometer-kit-with-free-10-strips-6.1-1726640112.jpg",
-              },
-              {
-                title: "Steam Vaporizer",
-                price: "₹499",
-                img: "https://www.jiomart.com/images/product/original/rvjhamgeke/amkay-steam-vaporiser-steam-inhaler-for-cold-cough-sinus-product-images-orvjhamgeke-p604556325-0-202310301323.jpg?im=Resize=(420,420)",
-              },
-            ].map((item) => (
+            {products.map((item) => (
               <div
-                key={item.title}
+                key={item._id}
                 className="rounded-xl shadow-lg p-5 bg-white transition-transform duration-300 hover:scale-105 hover:shadow-2xl border border-[#D1C4E9]"
               >
-                <img src={item.img} className="w-50 h-50" />
-                <h3 className="text-lg font-semibold mt-3">{item.title}</h3>
-                <p className="text-gray-600 text-sm mt-1">
-                  Fast and accurate readings.
-                </p>
-                <p className="text-[#7E57C2] font-bold mt-2">{item.price}</p>
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="w-full h-48 object-cover rounded"
+                />
+
+                <h3 className="text-lg font-semibold mt-3">{item.name}</h3>
+
+                <p className="text-[#7E57C2] font-bold mt-2">₹ {item.price}</p>
+
                 <button className="mt-3 bg-[#7E57C2] text-white px-4 py-2 rounded-lg w-full hover:bg-[#5E35B1] transition">
                   Buy Now
                 </button>
