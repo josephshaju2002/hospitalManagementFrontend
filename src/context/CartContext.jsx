@@ -3,15 +3,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
 
-  // load cart from sessionStorage
-  useEffect(() => {
+  const [cartItems, setCartItems] = useState(() => {
     const storedCart = sessionStorage.getItem("cart");
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
-  }, []);
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
 
   // save cart to sessionStorage
   useEffect(() => {
@@ -53,7 +49,8 @@ export const CartProvider = ({ children }) => {
       cartItems,
       addToCart,
       removeFromCart,
-      updateQuantity
+      updateQuantity,
+      setCartItems
     }}>
       {children}
     </CartContext.Provider>
