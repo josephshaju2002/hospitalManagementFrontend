@@ -127,23 +127,23 @@ function Home() {
                 <img
                   src={item.imageUrl}
                   alt={item.name}
-                  className="w-full h-48 object-cover rounded"
+                  className="w-full h-80 object-cover rounded"
                 />
 
                 <h3 className="text-lg font-semibold mt-3">{item.name}</h3>
 
                 <p className="text-[#7E57C2] font-bold mt-2">₹ {item.price}</p>
 
-                <button className="mt-3 bg-[#7E57C2] text-white px-4 py-2 rounded-lg w-full hover:bg-[#5E35B1] transition">
+                {/* <button className="mt-3 bg-[#7E57C2] text-white px-4 py-2 rounded-lg w-full hover:bg-[#5E35B1] transition">
                   Buy Now
-                </button>
+                </button> */}
               </div>
             ))}
           </div>
 
           <Link to="/buymed">
             <button className="mt-6 bg-[#5E35B1] text-white px-6 py-2 rounded-lg hover:bg-[#7E57C2] transition">
-              View More Products
+              View and Buy More Products
             </button>
           </Link>
         </div>

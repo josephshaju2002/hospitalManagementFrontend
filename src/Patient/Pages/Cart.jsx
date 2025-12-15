@@ -27,66 +27,65 @@ const Cart = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Cart Items List */}
           <div className="md:col-span-2 space-y-6">
-  {cartItems.map((item) => (
-    <div
-      key={item._id}
-      className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 
+            {cartItems.map((item) => (
+              <div
+                key={item._id}
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 
                  bg-[#EDE7F6] p-5 rounded-2xl shadow-md hover:shadow-lg 
                  transition-all border border-[#D1C4E9]"
-    >
-      {/* Left Section */}
-      <div className="flex gap-4 items-center">
-        <img
-          src={item.imageUrl}
-          className="w-20 h-20 object-cover rounded-xl border border-[#D1C4E9]"
-        />
-        <div>
-          <h2 className="font-semibold text-lg text-[#5E35B1]">
-            {item.name}
-          </h2>
-          <p className="text-[#7E57C2] font-bold mt-1">
-            ₹ {item.price * item.quantity}
-          </p>
-        </div>
-      </div>
+              >
+                {/* Left Section */}
+                <div className="flex gap-4 items-center">
+                  <img
+                    src={item.imageUrl}
+                    className="w-20 h-20 object-cover rounded-xl border border-[#D1C4E9]"
+                  />
+                  <div>
+                    <h2 className="font-semibold text-lg text-[#5E35B1]">
+                      {item.name}
+                    </h2>
+                    <p className="text-[#7E57C2] font-bold mt-1">
+                      ₹ {item.price * item.quantity}
+                    </p>
+                  </div>
+                </div>
 
-      {/* Quantity Controls */}
-      <div className="flex items-center gap-3 bg-[#FAF7FF] px-4 py-2 rounded-full border border-[#D1C4E9]">
-        <button
-          onClick={() => updateQuantity(item._id, -1)}
-          className="w-8 h-8 flex items-center justify-center 
+                {/* Quantity Controls */}
+                <div className="flex items-center gap-3 bg-[#FAF7FF] px-4 py-2 rounded-full border border-[#D1C4E9]">
+                  <button
+                    onClick={() => updateQuantity(item._id, -1)}
+                    className="w-8 h-8 flex items-center justify-center 
                      rounded-full bg-[#D1C4E9] text-[#5E35B1] 
                      hover:bg-[#B39DDB] font-bold transition"
-        >
-          −
-        </button>
+                  >
+                    −
+                  </button>
 
-        <span className="font-semibold text-[#1E142F]">
-          {item.quantity}
-        </span>
+                  <span className="font-semibold text-[#1E142F]">
+                    {item.quantity}
+                  </span>
 
-        <button
-          onClick={() => updateQuantity(item._id, 1)}
-          className="w-8 h-8 flex items-center justify-center 
+                  <button
+                    onClick={() => updateQuantity(item._id, 1)}
+                    className="w-8 h-8 flex items-center justify-center 
                      rounded-full bg-[#7E57C2] text-white 
                      hover:bg-[#5E35B1] font-bold transition"
-        >
-          +
-        </button>
-      </div>
+                  >
+                    +
+                  </button>
+                </div>
 
-      {/* Remove Button */}
-      <button
-        onClick={() => removeFromCart(item._id)}
-        className="text-red-500 hover:text-red-700 
+                {/* Remove Button */}
+                <button
+                  onClick={() => removeFromCart(item._id)}
+                  className="text-red-500 hover:text-red-700 
                    text-xl font-bold transition self-end sm:self-auto"
-      >
-        ✖
-      </button>
-    </div>
-  ))}
-</div>
-
+                >
+                  ✖
+                </button>
+              </div>
+            ))}
+          </div>
 
           {/* Order Summary */}
           <div className="bg-[#EDE7F6] shadow-xl rounded-xl p-6 h-fit border border-[#D1C4E9]">
