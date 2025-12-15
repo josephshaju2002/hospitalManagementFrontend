@@ -24,6 +24,8 @@ import Doctorcontact from "./Doctor/Doctorcontact";
 import AdminHome from "./Admin/Pages/AdminHome";
 import AdminSettings from "./Admin/Pages/AdminSettings.jsx";
 import { ToastContainer } from "react-toastify";
+import PaymentSuccess from "./Patient/Pages/PaymentSuccess.jsx";
+import PaymentError from "./Patient/Pages/PaymentError.jsx";
 
 function App() {
   const [loader, setLoader] = useState(true);
@@ -53,6 +55,8 @@ function App() {
         <Route path={"/profile"} element={<Profile />} />
         <Route path={"/view/:id"} element={<ViewMedicines />} />
         <Route path={"/cart"} element={<Cart />} />
+        <Route path={"/paymentsuccess"} element={<PaymentSuccess />} />
+        <Route path={"/paymenterror"} element={<PaymentError />} />
 
         {/* doctor */}
         <Route path={"/doctorappo"} element={<DoctorAppointments />} />

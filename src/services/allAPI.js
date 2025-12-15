@@ -32,6 +32,13 @@ export const getSingleMedicineAPI = (id,reqHeader) => {
 
 // ............................................patient..................................................
 
+// make cart payment (Stripe Checkout)
+export const makeCartPaymentAPI = (data, reqHeader) => {
+  return commonAPI("POST", `${SERVERURL}/cart-payment`, data, reqHeader);
+};
+
+
+
 // ............................................Admin....................................................
 // add medicine
 export const addMedicineAPI = async (reqBody, reqHeader) => {

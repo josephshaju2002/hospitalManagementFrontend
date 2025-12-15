@@ -5,17 +5,17 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  // load cart from localStorage
+  // load cart from sessionStorage
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
+    const storedCart = sessionStorage.getItem("cart");
     if (storedCart) {
       setCartItems(JSON.parse(storedCart));
     }
   }, []);
 
-  // save cart to localStorage
+  // save cart to sessionStorage
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
+    sessionStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
   const addToCart = (medicine) => {
