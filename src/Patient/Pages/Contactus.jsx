@@ -1,12 +1,70 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
 import { FiSend } from "react-icons/fi";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
+import { sendContactMessageAPI } from "../../services/allAPI";
+import { toast } from "react-toastify";
 
 function Contactus() {
+
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { name, email, subject, message } = formData;
+
+    if (!name || !email || !subject || !message) {
+      toast.warning("Please fill all fields");
+      return;
+    }
+
+    try {
+      const res = await sendContactMessageAPI({
+        ...formData,
+        role: "user",
+      });
+
+      if (res.status === 200 || res.status === 201) {
+        toast.success("Message sent successfully");
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to send message");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+  if (sessionStorage.getItem("existingUser")) {
+    const userData = JSON.parse(sessionStorage.getItem("existingUser"));
+    setFormData((prev) => ({
+      ...prev,
+      name: userData.username,
+      email: userData.email || "",
+    }));
+  }
+}, []);
+
+
   return (
     <>
       <Header />
@@ -22,32 +80,23 @@ function Contactus() {
         <p className="md:w-3/4 mx-auto text-center text-gray-700 leading-relaxed">
           At our hospital, your health and satisfaction are our top priorities.
           If you have questions, need support, or want to know more about our
-          services, we’re here to help. <br />
-          Our team is always ready to assist you with appointments, medical
-          inquiries, or general information.
+          services, we’re here to help.
         </p>
 
-        {/* Contact Options */}
+        {/* Contact Info */}
         <div className="md:grid grid-cols-3 mt-10 text-center gap-5">
-
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <FaLocationDot
-              className="text-3xl p-2 rounded-full bg-[#D1C4E9] text-[#5E35B1]"
-            />
+          <div className="flex items-center justify-center gap-3">
+            <FaLocationDot className="text-3xl p-2 rounded-full bg-[#D1C4E9] text-[#5E35B1]" />
             <h1>123 Main Street, Anytown, India</h1>
           </div>
 
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <FaPhoneAlt
-              className="text-3xl p-2 rounded-full bg-[#D1C4E9] text-[#5E35B1]"
-            />
+          <div className="flex items-center justify-center gap-3">
+            <FaPhoneAlt className="text-3xl p-2 rounded-full bg-[#D1C4E9] text-[#5E35B1]" />
             <h1>+91 4568136791</h1>
           </div>
 
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <IoMail
-              className="text-3xl p-2 rounded-full bg-[#D1C4E9] text-[#5E35B1]"
-            />
+          <div className="flex items-center justify-center gap-3">
+            <IoMail className="text-3xl p-2 rounded-full bg-[#D1C4E9] text-[#5E35B1]" />
             <h1>medipulse@gmail.com</h1>
           </div>
         </div>
@@ -62,52 +111,65 @@ function Contactus() {
                 Send Us a Message
               </h2>
 
-              <form className="space-y-4">
-
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <input
                   type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Name"
-                  className="w-full px-4 py-2 border border-[#D1C4E9] rounded-lg 
-                  focus:outline-none focus:ring-2 focus:ring-[#7E57C2] bg-white"
+                  className="w-full px-4 py-2 border rounded-lg"
                 />
 
                 <input
                   type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Email"
-                  className="w-full px-4 py-2 border border-[#D1C4E9] rounded-lg 
-                  focus:outline-none focus:ring-2 focus:ring-[#7E57C2] bg-white"
+                  className="w-full px-4 py-2 border rounded-lg"
+                />
+
+                <input
+                  type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  placeholder="Subject"
+                  className="w-full px-4 py-2 border rounded-lg"
                 />
 
                 <textarea
                   rows="4"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Message..."
-                  className="w-full px-4 py-2 border border-[#D1C4E9] rounded-lg resize-none
-                  focus:outline-none focus:ring-2 focus:ring-[#7E57C2] bg-white"
-                ></textarea>
+                  className="w-full px-4 py-2 border rounded-lg resize-none"
+                />
 
                 <button
                   type="submit"
                   className="w-full flex items-center justify-center gap-2 
                   bg-[#7E57C2] text-white py-2 rounded-lg font-semibold 
-                  hover:bg-[#5E35B1] transition shadow-md"
+                  hover:bg-[#5E35B1] transition"
                 >
                   Send <FiSend />
                 </button>
-
               </form>
             </div>
           </div>
 
-          {/* Google Map */}
+          {/* Google Map (RESTORED) */}
           <div className="flex justify-center mt-10 md:mt-0">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3921.439214127285!2d76.57955317501657!3d10.030958972626527!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b07d916a7b7f1b1%3A0x9fa17b8a6dbbc1cd!2sMuvattupuzha%2C%20Kerala!5e0!3m2!1sen!2sin!4v1696512345678!5m2!1sen!2sin"
               width="600"
               height="400"
               className="rounded-xl shadow-xl border border-[#D1C4E9]"
-              allowFullScreen=""
+              allowFullScreen
               loading="lazy"
-            ></iframe>
+            />
           </div>
 
         </div>
