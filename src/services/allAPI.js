@@ -39,6 +39,11 @@ export const sendContactMessageAPI = (reqBody) => {
   return commonAPI("POST", `${SERVERURL}/send-message`, reqBody);
 };
 
+// update user profile
+export const updateUserProfileAPI = (reqBody,reqHeader) => {
+  return commonAPI("PUT", `${SERVERURL}/update-userProfile`, reqBody, reqHeader); 
+};
+
 // ............................................Admin....................................................
 
 // add medicine
