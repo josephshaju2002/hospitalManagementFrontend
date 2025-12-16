@@ -44,6 +44,12 @@ export const updateUserProfileAPI = (reqBody,reqHeader) => {
   return commonAPI("PUT", `${SERVERURL}/update-userProfile`, reqBody, reqHeader); 
 };
 
+// get all doctor profiles
+export const getAllDoctorsAPI = () => {
+  return commonAPI("GET", `${SERVERURL}/get-all-doctors`);
+};
+
+
 // ............................................Doctor...................................................
 // update doctor profile
 export const updateDoctorProfileAPI = (reqBody, reqHeader) => {
