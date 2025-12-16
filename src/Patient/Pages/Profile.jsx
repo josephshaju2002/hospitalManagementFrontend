@@ -23,6 +23,18 @@ function ProfilePage() {
     number: "",
     bio: "",
   });
+
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswords({ ...passwords, [name]: value });
+  };
+
   const Navigate = useNavigate();
 
   const [profile, setProfile] = useState(null);
@@ -67,74 +79,82 @@ function ProfilePage() {
     }
   };
 
-  const handleUpdateProfile = async (e) => {
-  e.preventDefault();
+    const handleUpdateProfile = async (e) => {
+    e.preventDefault();
 
-  const token = sessionStorage.getItem("token");
-  if (!token) {
-    toast.error("Please login again");
-    return;
-  }
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login again");
+      return;
+    }
 
-  const existingUser = JSON.parse(
-    sessionStorage.getItem("existingUser")
-  );
+    const existingUser = JSON.parse(sessionStorage.getItem("existingUser"));
+    const reqHeader = { Authorization: `Bearer ${token}` };
+    const reqBody = new FormData();
 
-  const reqHeader = {
-    Authorization: `Bearer ${token}`,
-  };
-
-  const reqBody = new FormData();
-  reqBody.append("username", details.username);
-  reqBody.append("email", details.email);
-  reqBody.append("number", details.number);
-  reqBody.append("bio", details.bio);
-
-  if (profile) {
-    reqBody.append("profile", profile);
-  }
-
-  try {
-    const result = await updateUserProfileAPI(reqBody, reqHeader);
-
-    if (result.status === 200) {
-
-      // 🔐 EMAIL CHANGE → LOGOUT
-      if (details.email !== existingUser.email) {
-        toast.info("Email changed. Please login again.");
-        sessionStorage.clear();
-        Navigate("/login");
+    // If updating password
+    if (activeTab === "password") {
+      if (passwords.newPassword !== passwords.confirmPassword) {
+        toast.error("New password and confirm password do not match");
         return;
       }
-
-      toast.success("Profile updated successfully");
-
-      // ✅ UPDATE SESSION STORAGE
-      sessionStorage.setItem(
-        "existingUser",
-        JSON.stringify(result.data)
-      );
-
-      // ✅ UPDATE HEADER NAME & BIO
-      setUsername(result.data.username);
-      setBio(result.data.bio);
-
-      // ✅ UPDATE PROFILE IMAGE PREVIEW
-      if (result.data.profile) {
-        setProfilePreview(
-          `${SERVERURL}/imgUploads/${result.data.profile}`
-        );
-      } else {
-        setProfilePreview(DEFAULT_AVATAR);
-      }
+      reqBody.append("password", passwords.newPassword);
+    } else {
+      // Update other profile fields
+      reqBody.append("username", details.username);
+      reqBody.append("email", details.email);
+      reqBody.append("number", details.number);
+      reqBody.append("bio", details.bio);
     }
-  } catch (err) {
-    console.log(err);
-    toast.error("Profile update failed");
-  }
-};
 
+    if (profile) {
+      reqBody.append("profile", profile);
+    }
 
+    try {
+      const result = await updateUserProfileAPI(reqBody, reqHeader);
+
+      if (result.status === 200) {
+        // Logout if email changed
+        if (details.email !== existingUser.email) {
+          toast.info("Email changed. Please login again.");
+          sessionStorage.clear();
+          Navigate("/login");
+          return;
+        }
+
+        toast.success(
+          activeTab === "password"
+            ? "Password updated successfully"
+            : "Profile updated successfully"
+        );
+
+        // Update session storage & UI
+        sessionStorage.setItem("existingUser", JSON.stringify(result.data));
+        setUsername(result.data.username);
+        setBio(result.data.bio);
+        if (result.data.profile) {
+          setProfilePreview(`${SERVERURL}/imgUploads/${result.data.profile}`);
+        } else {
+          setProfilePreview(DEFAULT_AVATAR);
+        }
+
+        // Clear password fields
+        setPasswords({
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error(
+        activeTab === "password"
+          ? "Password update failed"
+          : "Profile update failed"
+      );
+    }
+  };
   return (
     <>
       <Header />
@@ -321,21 +341,11 @@ function ProfilePage() {
 
             {/* ===== TAB 2: PASSWORD ===== */}
             {activeTab === "password" && (
-              <form className="grid grid-cols-1 gap-6 max-w-lg mx-auto">
-                <div>
-                  <label className="block font-semibold mb-1 text-purple-900">
-                    Current Password
-                  </label>
-                  <div className="relative">
-                    <FaLock className="absolute left-3 top-3 text-purple-400" />
-                    <input
-                      type="password"
-                      className="w-full pl-10 p-3 border rounded-lg"
-                      style={{ borderColor: "#D1C4E9" }}
-                      placeholder="Enter current password"
-                    />
-                  </div>
-                </div>
+              <form
+                onSubmit={handleUpdateProfile}
+                className="grid grid-cols-1 gap-6 max-w-lg mx-auto"
+              >
+                
 
                 <div>
                   <label className="block font-semibold mb-1 text-purple-900">
@@ -345,6 +355,9 @@ function ProfilePage() {
                     <FaLock className="absolute left-3 top-3 text-purple-400" />
                     <input
                       type="password"
+                      name="newPassword"
+                      // value={passwords.newPassword}
+                      onChange={handlePasswordChange}
                       className="w-full pl-10 p-3 border rounded-lg"
                       style={{ borderColor: "#D1C4E9" }}
                       placeholder="Enter new password"
@@ -360,6 +373,9 @@ function ProfilePage() {
                     <FaLock className="absolute left-3 top-3 text-purple-400" />
                     <input
                       type="password"
+                      name="confirmPassword"
+                      // value={passwords.confirmPassword}
+                      onChange={handlePasswordChange}
                       className="w-full pl-10 p-3 border rounded-lg"
                       style={{ borderColor: "#D1C4E9" }}
                       placeholder="Confirm new password"
@@ -368,6 +384,7 @@ function ProfilePage() {
                 </div>
 
                 <button
+                  type="submit"
                   className="py-2 rounded-lg shadow"
                   style={{ backgroundColor: "#7E57C2", color: "white" }}
                 >
