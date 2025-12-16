@@ -28,7 +28,7 @@ function DoctorHeader() {
           
           <Link to={"/login"}>
             <button className="flex justify-between gap-2 items-center border border-[#7E57C2] rounded px-3 py-2 ms-3 hover:bg-[#7E57C2] hover:text-white transition">
-              <IoPersonOutline /> Login
+              <IoPersonOutline /> LOGOUT
             </button>
           </Link>
         </div>
@@ -41,7 +41,7 @@ function DoctorHeader() {
           </button>
           <Link to={"/login"}>
             <button className="flex justify-between items-center gap-2 border border-white rounded px-3 py-2 ms-3 hover:bg-white hover:text-[#7E57C2] transition">
-              <IoPersonOutline /> Login
+              <IoPersonOutline /> LOGOUT
             </button>
           </Link>
         </div>

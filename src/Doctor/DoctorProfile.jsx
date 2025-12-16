@@ -1,60 +1,76 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DoctorHeader from "./DoctorHeader";
 import Footer2 from "../Common/Components/Footer2";
-import { 
-  FaUserMd, FaEdit, FaCalendarAlt, FaSave, 
-  FaPhoneAlt, FaEnvelope, FaStar, FaHospitalUser 
+import {
+  FaEdit,
+  FaSave,
+  FaCalendarAlt,
+  FaPhoneAlt,
+  FaEnvelope,
 } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
-import { GiStethoscope } from "react-icons/gi";
+import { toast } from "react-toastify";
+import {
+  updateDoctorProfileAPI,
+  getDoctorProfileAPI,
+} from "../services/allAPI";
+import SERVERURL from "../services/serverURL";
 
 export default function DoctorProfile() {
   const [isEditing, setIsEditing] = useState(false);
+  const [preview, setPreview] = useState("");
+  const [token, setToken] = useState("");
 
   const [doctor, setDoctor] = useState({
-    name: "Dr. John Mathew",
-    specialization: "Cardiologist",
-    experience: "12 Years experience treating heart & vascular diseases.",
-    availableDays: ["Monday", "Wednesday", "Friday"],
-    phone: "+91 98765 43210",
-    email: "dr.john@example.com",
-    location: "Heart Care Hospital, Kochi",
-    qualifications: [
-      "MBBS – AIIMS Delhi",
-      "MD Cardiology – CMC Vellore",
-      "Fellowship in Interventional Cardiology – Australia",
-      "Member – Indian Heart Association",
-    ],
-    skills: [
-      "ECG Analysis",
-      "Bypass Surgery Prep",
-      "Heart Monitoring",
-      "Rehab Planning",
-      "Emergency Care",
-    ],
-    fee: 700,
-    duration: "30 Minutes",
-    photo: "https://cdn-icons-png.flaticon.com/512/387/387561.png",
+    name: "",
+    specialization: "",
+    experience: "",
+    availableDays: [],
+    phone: "",
+    email: "",
+    location: "",
+    qualifications: [],
+    skills: [],
+    fee: "",
+    duration: "",
+    photo: "",
   });
 
   const fileInputRef = useRef(null);
 
-  const allDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const allDays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
-  const toggleEdit = () => setIsEditing(!isEditing);
+  /* ================= TOKEN ================= */
+  useEffect(() => {
+    setToken(sessionStorage.getItem("token"));
+  }, []);
 
-  const handleDaySelect = (day) => {
-    setDoctor((prev) => {
-      const exists = prev.availableDays.includes(day);
-      return {
-        ...prev,
-        availableDays: exists
-          ? prev.availableDays.filter((d) => d !== day)
-          : [...prev.availableDays, day],
-      };
-    });
+  /* ================= FETCH PROFILE ================= */
+  useEffect(() => {
+    if (token) fetchDoctorProfile();
+  }, [token]);
+
+  const fetchDoctorProfile = async () => {
+    try {
+      const reqHeader = { Authorization: `Bearer ${token}` };
+      const res = await getDoctorProfileAPI(reqHeader);
+
+      if (res.status === 200) {
+        setDoctor(res.data.data);
+      }
+    } catch (err) {
+      toast.error("Failed to load doctor profile");
+    }
   };
 
+  /* ================= IMAGE ================= */
   const handleImageClick = () => {
     if (isEditing) fileInputRef.current.click();
   };
@@ -62,8 +78,60 @@ export default function DoctorProfile() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setDoctor({ ...doctor, photo: imageUrl });
+      setDoctor({ ...doctor, photo: file });
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  /* ================= DAYS ================= */
+  const handleDaySelect = (day) => {
+    if (!isEditing) return;
+    setDoctor((prev) => ({
+      ...prev,
+      availableDays: prev.availableDays.includes(day)
+        ? prev.availableDays.filter((d) => d !== day)
+        : [...prev.availableDays, day],
+    }));
+  };
+
+  /* ================= SAVE ================= */
+  const handleSaveProfile = async () => {
+    try {
+      const formData = new FormData();
+
+      Object.entries({
+        name: doctor.name,
+        specialization: doctor.specialization,
+        experience: doctor.experience,
+        phone: doctor.phone,
+        email: doctor.email,
+        location: doctor.location,
+        fee: doctor.fee,
+        duration: doctor.duration,
+        availableDays: JSON.stringify(doctor.availableDays),
+        qualifications: JSON.stringify(doctor.qualifications),
+        skills: JSON.stringify(doctor.skills),
+      }).forEach(([key, value]) => formData.append(key, value));
+
+      if (doctor.photo instanceof File) {
+        formData.append("photo", doctor.photo);
+      }
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      };
+
+      const res = await updateDoctorProfileAPI(formData, reqHeader);
+
+      if (res.status === 200) {
+        toast.success("Profile updated");
+        setIsEditing(false);
+        setPreview("");
+        fetchDoctorProfile();
+      }
+    } catch (err) {
+      toast.error("Update failed");
     }
   };
 
@@ -72,87 +140,84 @@ export default function DoctorProfile() {
       <DoctorHeader />
 
       <div className="min-h-screen bg-[#FAF7FF] p-6">
+        {/* ================= HEADER ================= */}
+        <div className="max-w-5xl mx-auto bg-[#EDE7F6] p-6 rounded-3xl shadow flex gap-6 items-center mt-10">
+          <img
+            src={
+              preview
+                ? preview
+                : doctor.photo
+                ? `${SERVERURL}/imgUploads/${doctor.photo}`
+                : "https://cdn-icons-png.flaticon.com/512/387/387561.png"
+            }
+            onClick={handleImageClick}
+            className="w-40 h-40 rounded-2xl object-cover cursor-pointer border-4 border-[#7E57C2]"
+            alt=""
+          />
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            hidden
+          />
 
-        {/* Editable Profile Header */}
-        <div className="max-w-5xl mx-auto bg-gradient-to-r from-[#FAF7FF] to-[#EDE7F6] p-6 rounded-3xl shadow-xl flex flex-col md:flex-row gap-6 items-center mt-10 transition-all duration-300">
-          <div className="relative group">
-            <img
-              src={doctor.photo}
-              alt="doctor"
-              onClick={handleImageClick}
-              className="w-36 h-36 md:w-40 md:h-40 rounded-2xl shadow-2xl object-cover cursor-pointer hover:scale-105 transition-transform duration-300 border-4 border-[#7E57C2] group-hover:shadow-[#7E57C2]/50"
-            />
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageChange}
-              accept="image/*"
-              className="hidden"
-            />
-            {isEditing && (
-              <div className="absolute bottom-1 right-1 bg-[#7E57C2] text-white p-1 rounded-full shadow-md cursor-pointer">
-                <FaEdit />
-              </div>
-            )}
-          </div>
-
-          <div className="flex-1 flex flex-col gap-3 w-full">
+          <div className="flex-1">
             {isEditing ? (
-              <div className="flex flex-col gap-2">
+              <>
                 <input
-                  type="text"
-                  className="border border-[#D1C4E9] bg-[#FAF7FF] w-full p-3 rounded-xl shadow-inner placeholder-[#7E57C2] focus:outline-none focus:ring-2 focus:ring-[#7E57C2] transition"
+                  className="border p-2 w-full mb-2"
                   value={doctor.name}
-                  placeholder="Doctor Name"
-                  onChange={(e) => setDoctor({ ...doctor, name: e.target.value })}
+                  onChange={(e) =>
+                    setDoctor({ ...doctor, name: e.target.value })
+                  }
                 />
                 <input
-                  type="text"
-                  className="border border-[#D1C4E9] bg-[#FAF7FF] w-full p-3 rounded-xl shadow-inner placeholder-[#7E57C2] focus:outline-none focus:ring-2 focus:ring-[#7E57C2] transition"
+                  className="border p-2 w-full mb-2"
                   value={doctor.specialization}
-                  placeholder="Specialization"
-                  onChange={(e) => setDoctor({ ...doctor, specialization: e.target.value })}
+                  onChange={(e) =>
+                    setDoctor({ ...doctor, specialization: e.target.value })
+                  }
                 />
                 <textarea
-                  className="border border-[#D1C4E9] bg-[#FAF7FF] w-full p-3 rounded-xl shadow-inner placeholder-[#7E57C2] focus:outline-none focus:ring-2 focus:ring-[#7E57C2] transition"
-                  rows={3}
-                  placeholder="Experience"
+                  className="border p-2 w-full"
                   value={doctor.experience}
-                  onChange={(e) => setDoctor({ ...doctor, experience: e.target.value })}
-                ></textarea>
-              </div>
+                  onChange={(e) =>
+                    setDoctor({ ...doctor, experience: e.target.value })
+                  }
+                />
+              </>
             ) : (
               <>
-                <h1 className="text-3xl md:text-4xl font-extrabold text-[#1E142F]">{doctor.name}</h1>
-                <p className="text-[#5E35B1] text-lg md:text-xl font-medium">{doctor.specialization}</p>
-                <p className="text-[#1E142F] mt-2 leading-relaxed">{doctor.experience}</p>
+                <h1 className="text-3xl font-bold">{doctor.name}</h1>
+                <p className="text-[#5E35B1]">{doctor.specialization}</p>
+                <p>{doctor.experience}</p>
               </>
             )}
           </div>
 
           <button
-            onClick={toggleEdit}
-            className="flex items-center gap-2 bg-[#7E57C2] hover:bg-[#5E35B1] text-white px-5 py-3 rounded-2xl shadow-lg transition-transform transform hover:scale-105 mt-4 md:mt-0 self-start md:self-center"
+            onClick={isEditing ? handleSaveProfile : () => setIsEditing(true)}
+            className="bg-[#7E57C2] text-white px-5 py-3 rounded-xl flex items-center gap-2"
           >
             {isEditing ? <FaSave /> : <FaEdit />}
             {isEditing ? "Save" : "Edit"}
           </button>
         </div>
 
-        {/* Available Days */}
+        {/* ================= DAYS ================= */}
         <div className="max-w-5xl mx-auto mt-6">
-          <h3 className="text-xl font-semibold text-gray-700 flex items-center gap-2">
+          <h3 className="font-semibold flex gap-2">
             <FaCalendarAlt /> Available Days
           </h3>
-          <div className="flex flex-wrap gap-3 mt-4">
+          <div className="flex gap-2 mt-2 flex-wrap">
             {allDays.map((day) => (
               <button
                 key={day}
-                onClick={() => isEditing && handleDaySelect(day)}
-                className={`px-4 py-2 rounded-full border transition ${
+                onClick={() => handleDaySelect(day)}
+                className={`px-4 py-2 rounded-full ${
                   doctor.availableDays.includes(day)
-                    ? "bg-[#7E57C2] text-white border-[#7E57C2]"
-                    : "bg-white text-gray-600 border-gray-400 hover:bg-gray-100"
+                    ? "bg-[#7E57C2] text-white"
+                    : "bg-gray-200"
                 }`}
               >
                 {day}
@@ -161,125 +226,103 @@ export default function DoctorProfile() {
           </div>
         </div>
 
-        {/* Doctor Info & Contact */}
-        <div className="max-w-5xl mx-auto mt-6 space-y-6">
+        {/* ================= QUALIFICATIONS ================= */}
+        <div className="max-w-5xl mx-auto mt-6 bg-white p-6 rounded-2xl shadow">
+          <h2 className="font-bold text-xl mb-3">Qualifications</h2>
+          {isEditing ? (
+            <textarea
+              className="border w-full p-2"
+              value={doctor.qualifications.join("\n")}
+              onChange={(e) =>
+                setDoctor({
+                  ...doctor,
+                  qualifications: e.target.value.split("\n"),
+                })
+              }
+            />
+          ) : (
+            <ul className="list-disc ml-6">
+              {doctor.qualifications.map((q, i) => (
+                <li key={i}>{q}</li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-          {/* Doctor Information */}
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-2xl font-bold text-[#5E35B1] mb-4">Doctor Information</h2>
-            {isEditing ? (
-              <textarea
-                rows={3}
-                value={doctor.experience}
-                onChange={(e) => setDoctor({ ...doctor, experience: e.target.value })}
-                className="border w-full p-3 rounded-xl"
-              />
-            ) : (
-              <p className="text-[#1E142F] leading-relaxed">{doctor.experience}</p>
-            )}
-          </div>
+        {/* ================= SKILLS ================= */}
+        <div className="max-w-5xl mx-auto mt-6 bg-white p-6 rounded-2xl shadow">
+          <h2 className="font-bold text-xl mb-3">Skills</h2>
+          {isEditing ? (
+            <input
+              className="border w-full p-2"
+              value={doctor.skills.join(", ")}
+              onChange={(e) =>
+                setDoctor({
+                  ...doctor,
+                  skills: e.target.value.split(",").map((s) => s.trim()),
+                })
+              }
+            />
+          ) : (
+            <div className="flex gap-2 flex-wrap">
+              {doctor.skills.map((s) => (
+                <span key={s} className="px-3 py-1 bg-[#D1C4E9] rounded-full">
+                  {s}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
 
-          {/* Contact Information */}
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-2xl font-bold text-[#5E35B1] mb-4">Contact Information</h2>
-            {isEditing ? (
-              <div className="flex flex-col gap-2">
-                <input
-                  type="text"
-                  value={doctor.phone}
-                  onChange={(e) => setDoctor({ ...doctor, phone: e.target.value })}
-                  className="border p-2 rounded-lg"
-                  placeholder="Phone"
-                />
-                <input
-                  type="text"
-                  value={doctor.email}
-                  onChange={(e) => setDoctor({ ...doctor, email: e.target.value })}
-                  className="border p-2 rounded-lg"
-                  placeholder="Email"
-                />
-                <input
-                  type="text"
-                  value={doctor.location}
-                  onChange={(e) => setDoctor({ ...doctor, location: e.target.value })}
-                  className="border p-2 rounded-lg"
-                  placeholder="Location"
-                />
+        {/* ================= CONTACT + CONSULT ================= */}
+        <div className="max-w-5xl mx-auto mt-6 bg-[#FAF7FF] p-6 rounded-2xl shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Phone */}
+            <div className="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm">
+              <FaPhoneAlt className="text-[#7E57C2] text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Phone</p>
+                <p className="font-semibold text-[#1E142F]">{doctor.phone}</p>
               </div>
-            ) : (
-              <>
-                <p className="flex items-center gap-3 text-[#1E142F]"><FaPhoneAlt className="text-[#7E57C2]" /> {doctor.phone}</p>
-                <p className="flex items-center gap-3 text-[#1E142F]"><FaEnvelope className="text-[#7E57C2]" /> {doctor.email}</p>
-                <p className="flex items-center gap-3 text-[#1E142F]"><MdLocationOn className="text-[#7E57C2]" /> {doctor.location}</p>
-              </>
-            )}
-          </div>
+            </div>
 
-          {/* Qualifications */}
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-2xl font-bold text-[#5E35B1] mb-4">Qualifications</h2>
-            {isEditing ? (
-              <textarea
-                rows={4}
-                value={doctor.qualifications.join("\n")}
-                onChange={(e) => setDoctor({ ...doctor, qualifications: e.target.value.split("\n") })}
-                className="border w-full p-3 rounded-xl"
-              />
-            ) : (
-              <ul className="list-disc ml-6 text-[#1E142F]">
-                {doctor.qualifications.map((q, i) => <li key={i}>{q}</li>)}
-              </ul>
-            )}
-          </div>
-
-          {/* Skills */}
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-2xl font-bold text-[#5E35B1] mb-4">Special Skills</h2>
-            {isEditing ? (
-              <input
-                type="text"
-                value={doctor.skills.join(", ")}
-                onChange={(e) => setDoctor({ ...doctor, skills: e.target.value.split(",").map(s => s.trim()) })}
-                className="border w-full p-3 rounded-xl"
-                placeholder="Comma separated skills"
-              />
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {doctor.skills.map((skill) => (
-                  <span key={skill} className="px-4 py-2 bg-[#D1C4E9] text-[#1E142F] rounded-full text-sm font-medium">{skill}</span>
-                ))}
+            {/* Email */}
+            <div className="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm">
+              <FaEnvelope className="text-[#7E57C2] text-xl" />
+              <div>
+                <p className="text-sm text-gray-500">Email</p>
+                <p className="font-semibold text-[#1E142F]">{doctor.email}</p>
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Consultation Details */}
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-2xl font-bold text-[#5E35B1] mb-4">Consultation Details</h2>
-            {isEditing ? (
-              <div className="flex flex-col gap-2">
-                <input
-                  type="number"
-                  value={doctor.fee}
-                  onChange={(e) => setDoctor({ ...doctor, fee: e.target.value })}
-                  className="border p-2 rounded-lg"
-                  placeholder="Fee"
-                />
-                <input
-                  type="text"
-                  value={doctor.duration}
-                  onChange={(e) => setDoctor({ ...doctor, duration: e.target.value })}
-                  className="border p-2 rounded-lg"
-                  placeholder="Duration"
-                />
+            {/* Location */}
+            <div className="flex items-center gap-3 bg-white p-4 rounded-xl shadow-sm">
+              <MdLocationOn className="text-[#7E57C2] text-2xl" />
+              <div>
+                <p className="text-sm text-gray-500">Location</p>
+                <p className="font-semibold text-[#1E142F]">
+                  {doctor.location}
+                </p>
               </div>
-            ) : (
-              <>
-                <p className="text-[#1E142F] mb-2"><strong>Fee:</strong> ₹{doctor.fee} per session</p>
-                <p className="text-[#1E142F]"><strong>Consultation Duration:</strong> {doctor.duration}</p>
-              </>
-            )}
-          </div>
+            </div>
 
+            {/* Fee & Duration */}
+            <div className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm">
+              <div>
+                <p className="text-sm text-gray-500">Consultation Fee</p>
+                <p className="font-bold text-[#7E57C2] text-lg">
+                  ₹{doctor.fee}
+                </p>
+              </div>
+
+              <div className="text-right">
+                <p className="text-sm text-gray-500">Duration</p>
+                <p className="font-semibold text-[#1E142F]">
+                  {doctor.duration}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
