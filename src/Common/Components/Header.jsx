@@ -189,6 +189,16 @@ function Header() {
                   <Avatar
                     alt="User"
                     src={avatar}
+                    sx={{
+                      width: 44,
+                      height: 44,
+                      border: "2px solid #FAF7FF",
+                      cursor: "pointer",
+                      transition: "0.3s",
+                      "&:hover": {
+                        boxShadow: "0 0 0 3px rgba(255,255,255,0.4)",
+                      },
+                    }}
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = DEFAULT_AVATAR;
