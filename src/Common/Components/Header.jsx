@@ -16,6 +16,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaCartPlus } from "react-icons/fa";
 import { useState } from "react";
 import { useEffect } from "react";
+import { userProfileUpdate } from "../../context/ContextShare";
+import { useContext } from "react";
+import SERVERURL from "../../services/serverURL";
 
 const pages = [
   { name: "Home", path: "/" },
@@ -38,23 +41,44 @@ const settings = [
 function Header() {
   const navigate = useNavigate();
 
+  const { updateProfileStatus } = useContext(userProfileUpdate);
+
+  const DEFAULT_AVATAR =
+    "https://cdn-icons-png.flaticon.com/512/2922/2922510.png";
+
+  const [avatar, setAvatar] = useState(DEFAULT_AVATAR);
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [token,setToken] = useState("")
+  const [token, setToken] = useState("");
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
-  useEffect(()=>{
-    if(sessionStorage.getItem("token")){
-      setToken(sessionStorage.getItem("token"))
+  useEffect(() => {
+    if (sessionStorage.getItem("token")) {
+      setToken(sessionStorage.getItem("token"));
     }
-  },[])
+  }, []);
 
   // console.log(token);
-  
+  useEffect(() => {
+    const existingUser = sessionStorage.getItem("existingUser");
+
+    if (existingUser) {
+      const user = JSON.parse(existingUser);
+
+      if (user.profile) {
+        setAvatar(`${SERVERURL}/imgUploads/${user.profile}`);
+      } else {
+        setAvatar(DEFAULT_AVATAR);
+      }
+    } else {
+      setAvatar(DEFAULT_AVATAR);
+    }
+  }, [updateProfileStatus]); // 🔥 key line
 
   return (
     <AppBar
@@ -158,38 +182,53 @@ function Header() {
 
           {/* Avatar / Settings */}
 
-          {token && <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="User Menu">
-              <IconButton onClick={handleOpenUserMenu}>
-                <Avatar alt="User" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              anchorEl={anchorElUser}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map(({ name, path }) => (
-                <MenuItem
-                  key={name}
-                  onClick={() => {
-                    navigate(path);
-                    handleCloseUserMenu();
-                  }}
-                >
-                  <Typography>{name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>}
+          {token && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="User Menu">
+                <IconButton onClick={handleOpenUserMenu}>
+                  <Avatar
+                    alt="User"
+                    src={avatar}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = DEFAULT_AVATAR;
+                    }}
+                  />
+                </IconButton>
+              </Tooltip>
 
-          {!token &&<div>
-            <Link to={"/login"}>
-            <button className="p-3 rounded" style={{ color: "#9575CD",backgroundColor:"white" }}>LOGIN</button>
-            </Link>
-            
-          </div>}
-          
+              <Menu
+                anchorEl={anchorElUser}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map(({ name, path }) => (
+                  <MenuItem
+                    key={name}
+                    onClick={() => {
+                      navigate(path);
+                      handleCloseUserMenu();
+                    }}
+                  >
+                    <Typography>{name}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          )}
+
+          {!token && (
+            <div>
+              <Link to={"/login"}>
+                <button
+                  className="p-3 rounded"
+                  style={{ color: "#9575CD", backgroundColor: "white" }}
+                >
+                  LOGIN
+                </button>
+              </Link>
+            </div>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

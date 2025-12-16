@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaUser, FaEnvelope, FaCamera, FaLock } from "react-icons/fa";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
@@ -6,12 +6,17 @@ import { toast } from "react-toastify";
 import { updateUserProfileAPI } from "../../services/allAPI";
 import SERVERURL from "../../services/serverURL";
 import { useNavigate } from "react-router-dom";
+import { userProfileUpdate } from "../../context/ContextShare";
+
 
 function ProfilePage() {
   const DEFAULT_AVATAR =
     "https://cdn-icons-png.flaticon.com/512/2922/2922510.png";
 
   const [activeTab, setActiveTab] = useState("details");
+
+    const {setUpdateProfileStatus} = useContext(userProfileUpdate)
+
 
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
@@ -128,6 +133,7 @@ function ProfilePage() {
             ? "Password updated successfully"
             : "Profile updated successfully"
         );
+        setUpdateProfileStatus(result)
 
         // Update session storage & UI
         sessionStorage.setItem("existingUser", JSON.stringify(result.data));
