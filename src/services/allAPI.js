@@ -49,9 +49,16 @@ export const getAllDoctorsAPI = () => {
   return commonAPI("GET", `${SERVERURL}/get-all-doctors`);
 };
 
+// book appointment
 export const bookAppointmentAPI = (reqBody, reqHeader) => {
   return commonAPI("POST",`${SERVERURL}/book-appointment`,reqBody,reqHeader);
 };
+
+// get appointment doctors
+export const getMyAppointmentsAPI = (reqHeader) => {
+  return commonAPI("GET",`${SERVERURL}/my-appointments`,{},reqHeader);
+};
+
 
 
 
