@@ -76,6 +76,12 @@ export const getDoctorProfileAPI = (reqHeader) => {
   return commonAPI("GET",`${SERVERURL}/get-doctor-profile`,{},reqHeader);
 };
 
+// get all appointments
+export const getDoctorAppointmentsAPI = (reqHeader) => {
+  return commonAPI("GET",`${SERVERURL}/doctor/appointments`,"",reqHeader);
+};
+
+
 
 // ............................................Admin....................................................
 
