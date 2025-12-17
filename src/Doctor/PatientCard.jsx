@@ -46,23 +46,29 @@ function PatientCard() {
   }, []);
 
   const fetchAppointment = async () => {
-    try {
-      const token = sessionStorage.getItem("token");
+  try {
+    const token = sessionStorage.getItem("token");
 
-      const reqHeader = {
-        Authorization: `Bearer ${token}`,
-      };
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
 
-      const res = await getSingleAppointmentAPI(appointmentId, reqHeader);
+    const res = await getSingleAppointmentAPI(appointmentId, reqHeader);
 
-      if (res.status === 200) {
-        setAppointment(res.data.data);
+    if (res.status === 200) {
+      const appt = res.data.data;
+      setAppointment(appt);
+
+      if (appt.patientId?.health) {
+        setHealth(appt.patientId.health);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to load patient details");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to load patient details");
+  }
+};
+
 
   if (!appointment) {
     return (

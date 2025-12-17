@@ -3,7 +3,7 @@ import { FaUser, FaEnvelope, FaCamera, FaLock } from "react-icons/fa";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
 import { toast } from "react-toastify";
-import { updateUserProfileAPI } from "../../services/allAPI";
+import { getLoggedUserAPI, updateUserProfileAPI } from "../../services/allAPI";
 import SERVERURL from "../../services/serverURL";
 import { useNavigate } from "react-router-dom";
 import { userProfileUpdate } from "../../context/ContextShare";
@@ -26,12 +26,28 @@ function ProfilePage() {
 });
 
 useEffect(() => {
-  const existingUser = JSON.parse(sessionStorage.getItem("existingUser"));
-
-  if (existingUser?.health) {
-    setHealth(existingUser.health);
+  if (activeTab === "health") {
+    fetchLatestUser();
   }
-}, []);
+}, [activeTab]);
+
+
+const fetchLatestUser = async () => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const reqHeader = { Authorization: `Bearer ${token}` };
+
+    const res = await getLoggedUserAPI(reqHeader);
+
+    if (res.status === 200) {
+      sessionStorage.setItem("existingUser", JSON.stringify(res.data));
+      setHealth(res.data.health || {});
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 
 

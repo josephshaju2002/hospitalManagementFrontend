@@ -91,6 +91,13 @@ export const updatePatientHealthAPI = (patientId, reqBody, reqHeader) => {
   return commonAPI("PUT",`${SERVERURL}/update-patient-health/${patientId}`,reqBody,reqHeader);
 };
 
+// to update health status in session storage
+
+export const getLoggedUserAPI = (reqHeader) => {
+  return commonAPI("GET", `${SERVERURL}/get-logged-user`, "", reqHeader);
+};
+
+
 
 
 
