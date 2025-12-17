@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch, FaCalendarAlt, FaUserMd } from "react-icons/fa";
+import { FaUserMd } from "react-icons/fa";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
-import { getAllDoctorsAPI } from "../../services/allAPI";
+import { getAllDoctorsAPI, bookAppointmentAPI } from "../../services/allAPI";
 import SERVERURL from "../../services/serverURL";
+import { toast } from "react-toastify";
 
 function GetAppointments() {
   const [doctors, setDoctors] = useState([]);
   const [specialization, setSpecialization] = useState("");
-  const [date, setDate] = useState("");
+  const [token, setToken] = useState("");
+
   const uniqueSpecializations = [
     ...new Set(doctors.map((doc) => doc.specialization).filter(Boolean)),
   ];
 
-  /* ================= FETCH DOCTORS ================= */
+  useEffect(() => {
+    setToken(sessionStorage.getItem("token"));
+  }, []);
+
   useEffect(() => {
     fetchDoctors();
   }, []);
@@ -26,6 +31,35 @@ function GetAppointments() {
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  /* ================= BOOK APPOINTMENT ================= */
+  const handleBookAppointment = async (doctorId) => {
+    if (!token) {
+      toast.warning("Please login to book appointment");
+      return;
+    }
+
+    const reqBody = {
+      doctorId,
+      date: new Date().toISOString().split("T")[0], 
+      time: "10:00 AM", // static for now
+    };
+
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await bookAppointmentAPI(reqBody, reqHeader);
+
+      if (res.status === 200) {
+        toast.success("Appointment booked successfully");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to book appointment");
     }
   };
 
@@ -56,29 +90,21 @@ function GetAppointments() {
           </h2>
 
           <div className="max-w-md mx-auto">
-            <label className="block font-medium mb-2 text-[#1E142F]">
-              Specialization
-            </label>
+            <label className="block font-medium mb-2">Specialization</label>
 
-            <div className="relative">
-              <select
-                className="w-full p-4 border border-[#9575CD] rounded-xl bg-white
-                   text-[#1E142F] focus:outline-none focus:ring-2
-                   focus:ring-[#7E57C2] transition"
-                value={specialization}
-                onChange={(e) => setSpecialization(e.target.value)}
-              >
-                <option value="">All Specializations</option>
-                {uniqueSpecializations.map((spec) => (
-                  <option key={spec} value={spec}>
-                    {spec}
-                  </option>
-                ))}
-              </select>
-
-              {/* Optional icon */}
-              <FaUserMd className="absolute right-4 top-1/2 -translate-y-1/2 text-[#7E57C2]" />
-            </div>
+            <select
+              className="w-full p-4 border border-[#9575CD] rounded-xl bg-white
+              focus:outline-none focus:ring-2 focus:ring-[#7E57C2]"
+              value={specialization}
+              onChange={(e) => setSpecialization(e.target.value)}
+            >
+              <option value="">All Specializations</option>
+              {uniqueSpecializations.map((spec) => (
+                <option key={spec} value={spec}>
+                  {spec}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -121,7 +147,10 @@ function GetAppointments() {
                 </div>
 
                 {/* Book Button */}
-                <button className="w-full mt-5 bg-[#7E57C2] text-white py-2 rounded-lg">
+                <button
+                  onClick={() => handleBookAppointment(doc._id)}
+                  className="w-full mt-5 bg-[#7E57C2] hover:bg-[#5E35B1] text-white py-2 rounded-lg"
+                >
                   Book Appointment
                 </button>
               </div>
