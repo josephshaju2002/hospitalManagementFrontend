@@ -81,6 +81,11 @@ export const getDoctorAppointmentsAPI = (reqHeader) => {
   return commonAPI("GET",`${SERVERURL}/doctor/appointments`,"",reqHeader);
 };
 
+// get single patient card
+export const getSingleAppointmentAPI = (id, reqHeader) => {
+  return commonAPI("GET",`${SERVERURL}/appointment/${id}`,"",reqHeader);
+};
+
 
 
 // ............................................Admin....................................................

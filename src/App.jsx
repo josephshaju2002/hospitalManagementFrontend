@@ -61,7 +61,7 @@ function App() {
         {/* doctor */}
         <Route path={"/doctorappo"} element={<DoctorAppointments />} />
         <Route path={"/doctorprofile"} element={<DoctorProfile />} />
-        <Route path={"/patientcard"} element={<PatientCard />} />
+        <Route path={"/patientcard/:appointmentId"} element={<PatientCard />} />
         <Route path={"/doctorcontact"} element={<Doctorcontact />} />
 
         {/* admin */}

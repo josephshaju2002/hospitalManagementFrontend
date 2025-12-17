@@ -8,15 +8,25 @@ import SERVERURL from "../../services/serverURL";
 import { useNavigate } from "react-router-dom";
 import { userProfileUpdate } from "../../context/ContextShare";
 
-
 function ProfilePage() {
   const DEFAULT_AVATAR =
     "https://cdn-icons-png.flaticon.com/512/2922/2922510.png";
 
   const [activeTab, setActiveTab] = useState("details");
 
-    const {setUpdateProfileStatus} = useContext(userProfileUpdate)
+  const [health, setHealth] = useState({
+  bloodGroup: "",
+  height: "",
+  weight: "",
+  allergies: "",
+  conditions: "",
+  medications: "",
+  smoking: "No",
+  alcohol: "No",
+});
 
+
+  const { setUpdateProfileStatus } = useContext(userProfileUpdate);
 
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
@@ -84,7 +94,7 @@ function ProfilePage() {
     }
   };
 
-    const handleUpdateProfile = async (e) => {
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
     const token = sessionStorage.getItem("token");
@@ -133,7 +143,7 @@ function ProfilePage() {
             ? "Password updated successfully"
             : "Profile updated successfully"
         );
-        setUpdateProfileStatus(result)
+        setUpdateProfileStatus(result);
 
         // Update session storage & UI
         sessionStorage.setItem("existingUser", JSON.stringify(result.data));
@@ -351,8 +361,6 @@ function ProfilePage() {
                 onSubmit={handleUpdateProfile}
                 className="grid grid-cols-1 gap-6 max-w-lg mx-auto"
               >
-                
-
                 <div>
                   <label className="block font-semibold mb-1 text-purple-900">
                     New Password
@@ -403,24 +411,28 @@ function ProfilePage() {
             {activeTab === "health" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {[
-                  ["Blood Group", "O+ Positive"],
-                  ["Height", "178 cm"],
-                  ["Weight", "72 kg"],
-                  ["Allergies", "No known allergies"],
-                  ["Existing Conditions", "None"],
-                  ["Current Medications", "Not taking any regular medication"],
+                  ["Blood Group", health.bloodGroup || "Not updated"],
+                  [
+                    "Height",
+                    health.height ? `${health.height} cm` : "Not updated",
+                  ],
+                  [
+                    "Weight",
+                    health.weight ? `${health.weight} kg` : "Not updated",
+                  ],
+                  ["Allergies", health.allergies || "None"],
+                  ["Chronic Conditions", health.conditions || "None"],
+                  ["Current Medications", health.medications || "None"],
+                  ["Smoking", health.smoking || "No"],
+                  ["Alcohol Consumption", health.alcohol || "No"],
                 ].map(([label, value]) => (
                   <div
                     key={label}
                     className="p-5 rounded-lg shadow"
                     style={{ backgroundColor: "#EDE7F6" }}
                   >
-                    <p className="font-semibold" style={{ color: "#5E35B1" }}>
-                      {label}
-                    </p>
-                    <p className="mt-1" style={{ color: "#1E142F" }}>
-                      {value}
-                    </p>
+                    <p className="font-semibold text-[#5E35B1]">{label}</p>
+                    <p className="mt-1 text-[#1E142F]">{value}</p>
                   </div>
                 ))}
               </div>
