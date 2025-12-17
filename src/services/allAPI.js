@@ -59,7 +59,10 @@ export const getMyAppointmentsAPI = (reqHeader) => {
   return commonAPI("GET",`${SERVERURL}/my-appointments`,{},reqHeader);
 };
 
-
+// cancel appointment
+export const cancelAppointmentAPI = (appointmentId, reqHeader) => {
+  return commonAPI("DELETE",`${SERVERURL}/cancel-appointment/${appointmentId}`,"",reqHeader);
+};
 
 
 // ............................................Doctor...................................................

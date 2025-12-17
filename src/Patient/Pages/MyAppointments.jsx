@@ -3,6 +3,7 @@ import { FaUserMd, FaPills, FaUser, FaComments } from "react-icons/fa";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
 import { getMyAppointmentsAPI } from "../../services/allAPI";
+import { cancelAppointmentAPI } from "../../services/allAPI";
 import SERVERURL from "../../services/serverURL";
 import { toast } from "react-toastify";
 
@@ -43,6 +44,32 @@ function MyAppointments() {
   const close = () => {
     setOpenModal(null);
     setSelectedAppointment(null);
+  };
+
+  const handleCancelAppointment = async (appointmentId) => {
+    const confirmCancel = window.confirm(
+      "Are you sure you want to cancel this appointment?"
+    );
+
+    if (!confirmCancel) return;
+
+    try {
+      const token = sessionStorage.getItem("token");
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await cancelAppointmentAPI(appointmentId, reqHeader);
+
+      if (res.status === 200) {
+        toast.success("Appointment cancelled");
+        fetchAppointments();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to cancel appointment");
+    }
   };
 
   return (
@@ -98,7 +125,7 @@ function MyAppointments() {
                 </div>
 
                 {/* Buttons */}
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3">
                   <button
                     className="flex items-center justify-center gap-2 bg-[#9575CD] hover:bg-[#7E57C2] text-white py-2 rounded-lg"
                     onClick={() => open("medicine", item)}
@@ -119,6 +146,12 @@ function MyAppointments() {
                   >
                     <FaComments /> Chat
                   </button>
+                  <button
+                    className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
+                    onClick={() => handleCancelAppointment(item._id)}
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             ))}
@@ -135,9 +168,7 @@ function MyAppointments() {
               {openModal}
             </h2>
 
-            <p className="text-gray-700">
-              Feature coming soon 🚀
-            </p>
+            <p className="text-gray-700">Feature coming soon 🚀</p>
 
             <button
               className="mt-6 w-full bg-[#7E57C2] text-white py-2 rounded-lg"
