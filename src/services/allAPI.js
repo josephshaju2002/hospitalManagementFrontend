@@ -86,6 +86,12 @@ export const getSingleAppointmentAPI = (id, reqHeader) => {
   return commonAPI("GET",`${SERVERURL}/appointment/${id}`,"",reqHeader);
 };
 
+// edit patient health status
+export const updatePatientHealthAPI = (patientId, reqBody, reqHeader) => {
+  return commonAPI("PUT",`${SERVERURL}/update-patient-health/${patientId}`,reqBody,reqHeader);
+};
+
+
 
 
 // ............................................Admin....................................................

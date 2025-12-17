@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import DoctorHeader from "./DoctorHeader";
 import Footer2 from "../Common/Components/Footer2";
-import { getSingleAppointmentAPI } from "../services/allAPI";
+import { getSingleAppointmentAPI, updatePatientHealthAPI } from "../services/allAPI";
 import { toast } from "react-toastify";
 import SERVERURL from "../services/serverURL";
 
@@ -22,6 +22,23 @@ function PatientCard() {
     smoking: "No",
     alcohol: "No",
   });
+
+  const handleSaveHealth = async () => {
+  try {
+    const token = sessionStorage.getItem("token");
+
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    await updatePatientHealthAPI(patient._id, health, reqHeader);
+
+    toast.success("Health status updated");
+  } catch (error) {
+    toast.error("Failed to save health status");
+  }
+};
+
 
   /* ================= FETCH APPOINTMENT ================= */
   useEffect(() => {
@@ -212,7 +229,7 @@ function PatientCard() {
                 </div>
 
                 <div className="flex justify-end mt-6">
-                  <button className="bg-[#7E57C2] text-white px-6 py-2 rounded-lg hover:bg-[#5E35B1]">
+                  <button  onClick={handleSaveHealth} className="bg-[#7E57C2] text-white px-6 py-2 rounded-lg hover:bg-[#5E35B1]">
                     Save Health Status
                   </button>
                 </div>

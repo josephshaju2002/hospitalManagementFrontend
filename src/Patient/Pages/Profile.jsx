@@ -25,6 +25,15 @@ function ProfilePage() {
   alcohol: "No",
 });
 
+useEffect(() => {
+  const existingUser = JSON.parse(sessionStorage.getItem("existingUser"));
+
+  if (existingUser?.health) {
+    setHealth(existingUser.health);
+  }
+}, []);
+
+
 
   const { setUpdateProfileStatus } = useContext(userProfileUpdate);
 
