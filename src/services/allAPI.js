@@ -97,6 +97,12 @@ export const getLoggedUserAPI = (reqHeader) => {
   return commonAPI("GET", `${SERVERURL}/get-logged-user`, "", reqHeader);
 };
 
+// prescribe medicines
+export const updatePrescriptionAPI = (appointmentId, reqBody, reqHeader) => {
+  return commonAPI("PUT",`${SERVERURL}/update-prescription/${appointmentId}`,reqBody,reqHeader);
+};
+
+
 
 
 

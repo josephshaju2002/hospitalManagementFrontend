@@ -97,7 +97,7 @@ function Home() {
         </div>
 
         {/* AI CHAT SECTION */}
-        <div className="px-5 md:px-20 my-16 text-center">
+        {/* <div className="px-5 md:px-20 my-16 text-center">
           <h2 className="text-3xl font-bold text-[#7E57C2]">
             AI Chat Assistant
           </h2>
@@ -110,7 +110,7 @@ function Home() {
               Chat with AI <FaRobot className="inline ml-2" />
             </button>
           </Link>
-        </div>
+        </div> */}
 
         {/* PRODUCTS */}
         <div className="px-5 md:px-20 my-20">

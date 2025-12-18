@@ -3,7 +3,11 @@ import { useParams } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import DoctorHeader from "./DoctorHeader";
 import Footer2 from "../Common/Components/Footer2";
-import { getSingleAppointmentAPI, updatePatientHealthAPI } from "../services/allAPI";
+import {
+  getSingleAppointmentAPI,
+  updatePatientHealthAPI,
+  updatePrescriptionAPI,
+} from "../services/allAPI";
 import { toast } from "react-toastify";
 import SERVERURL from "../services/serverURL";
 
@@ -11,6 +15,10 @@ function PatientCard() {
   const { appointmentId } = useParams();
   const [tab, setTab] = useState("profile");
   const [appointment, setAppointment] = useState(null);
+
+  const [prescription, setPrescription] = useState([
+    { medicine: "", dosage: "", duration: "", notes: "" },
+  ]);
 
   const [health, setHealth] = useState({
     bloodGroup: "",
@@ -24,21 +32,51 @@ function PatientCard() {
   });
 
   const handleSaveHealth = async () => {
-  try {
-    const token = sessionStorage.getItem("token");
+    try {
+      const token = sessionStorage.getItem("token");
 
-    const reqHeader = {
-      Authorization: `Bearer ${token}`,
-    };
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
 
-    await updatePatientHealthAPI(patient._id, health, reqHeader);
+      await updatePatientHealthAPI(patient._id, health, reqHeader);
 
-    toast.success("Health status updated");
-  } catch (error) {
-    toast.error("Failed to save health status");
-  }
-};
+      toast.success("Health status updated");
+    } catch (error) {
+      toast.error("Failed to save health status");
+    }
+  };
 
+  const handlePrescriptionChange = (index, field, value) => {
+    const updated = [...prescription];
+    updated[index][field] = value;
+    setPrescription(updated);
+  };
+
+  const addMedicine = () => {
+    setPrescription([
+      ...prescription,
+      { medicine: "", dosage: "", duration: "", notes: "" },
+    ]);
+  };
+
+  const removeMedicine = (index) => {
+    const updated = prescription.filter((_, i) => i !== index);
+    setPrescription(updated);
+  };
+
+  const savePrescription = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const reqHeader = { Authorization: `Bearer ${token}` };
+
+      await updatePrescriptionAPI(appointment._id, { prescription }, reqHeader);
+
+      toast.success("Prescription saved");
+    } catch (error) {
+      toast.error("Failed to save prescription");
+    }
+  };
 
   /* ================= FETCH APPOINTMENT ================= */
   useEffect(() => {
@@ -46,29 +84,36 @@ function PatientCard() {
   }, []);
 
   const fetchAppointment = async () => {
-  try {
-    const token = sessionStorage.getItem("token");
+    try {
+      const token = sessionStorage.getItem("token");
 
-    const reqHeader = {
-      Authorization: `Bearer ${token}`,
-    };
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
 
-    const res = await getSingleAppointmentAPI(appointmentId, reqHeader);
+      const res = await getSingleAppointmentAPI(appointmentId, reqHeader);
 
-    if (res.status === 200) {
-      const appt = res.data.data;
-      setAppointment(appt);
+      if (res.status === 200) {
+        const appt = res.data.data;
+        setAppointment(appt);
 
-      if (appt.patientId?.health) {
-        setHealth(appt.patientId.health);
+        if (appt.patientId?.health) {
+          setHealth(appt.patientId.health);
+        }
+
+        if (appt.prescription && appt.prescription.length > 0) {
+          setPrescription(appt.prescription);
+        } else {
+          setPrescription([
+            { medicine: "", dosage: "", duration: "", notes: "" },
+          ]);
+        }
       }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to load patient details");
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Failed to load patient details");
-  }
-};
-
+  };
 
   if (!appointment) {
     return (
@@ -235,7 +280,10 @@ function PatientCard() {
                 </div>
 
                 <div className="flex justify-end mt-6">
-                  <button  onClick={handleSaveHealth} className="bg-[#7E57C2] text-white px-6 py-2 rounded-lg hover:bg-[#5E35B1]">
+                  <button
+                    onClick={handleSaveHealth}
+                    className="bg-[#7E57C2] text-white px-6 py-2 rounded-lg hover:bg-[#5E35B1]"
+                  >
                     Save Health Status
                   </button>
                 </div>
@@ -245,12 +293,94 @@ function PatientCard() {
 
           {/* ================= MEDICINE TAB (UNCHANGED) ================= */}
           {tab === "medicines" && (
-            <p className="mt-8 text-center">Medicine UI stays same</p>
+            <div className="mt-8 space-y-6">
+              <h3 className="text-xl font-bold text-[#1E142F]">
+                Prescribe Medicines
+              </h3>
+
+              {prescription.map((item, index) => (
+                <div
+                  key={index}
+                  className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-4 rounded-xl shadow"
+                >
+                  <input
+                    type="text"
+                    placeholder="Medicine Name"
+                    className="border p-2 rounded"
+                    value={item.medicine}
+                    onChange={(e) =>
+                      handlePrescriptionChange(
+                        index,
+                        "medicine",
+                        e.target.value
+                      )
+                    }
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Dosage (1-0-1)"
+                    className="border p-2 rounded"
+                    value={item.dosage}
+                    onChange={(e) =>
+                      handlePrescriptionChange(index, "dosage", e.target.value)
+                    }
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Duration (5 days)"
+                    className="border p-2 rounded"
+                    value={item.duration}
+                    onChange={(e) =>
+                      handlePrescriptionChange(
+                        index,
+                        "duration",
+                        e.target.value
+                      )
+                    }
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="Notes"
+                    className="border p-2 rounded"
+                    value={item.notes}
+                    onChange={(e) =>
+                      handlePrescriptionChange(index, "notes", e.target.value)
+                    }
+                  />
+
+                  <button
+                    onClick={() => removeMedicine(index)}
+                    className="md:col-span-4 text-red-500 text-sm"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+
+              <div className="flex gap-4">
+                <button
+                  onClick={addMedicine}
+                  className="bg-[#D1C4E9] px-4 py-2 rounded"
+                >
+                  + Add Medicine
+                </button>
+
+                <button
+                  onClick={savePrescription}
+                  className="bg-[#7E57C2] text-white px-6 py-2 rounded-lg"
+                >
+                  Save Prescription
+                </button>
+              </div>
+            </div>
           )}
 
           {/* ================= CHAT TAB (UNCHANGED) ================= */}
           {tab === "chat" && (
-            <p className="mt-8 text-center">Chat UI stays same</p>
+            <p className="mt-8 text-center"></p>
           )}
         </div>
       </div>

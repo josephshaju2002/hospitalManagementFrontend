@@ -27,6 +27,42 @@ const videos = [
     link: "https://youtu.be/WuyPuH9ojCE",
     thumbnail: "https://img.youtube.com/vi/WuyPuH9ojCE/maxresdefault.jpg",
   },
+  {
+    id: 5,
+    title: "What is Mental Health?",
+    link: "https://www.youtube.com/watch?v=G0zJGDokyWQ",
+    thumbnail: "https://img.youtube.com/vi/G0zJGDokyWQ/maxresdefault.jpg",
+  },
+   {
+    id: 6,
+    title: "10 Signs Your Mental Health is Getting Worse",
+    link: "https://www.youtube.com/watch?v=5bNI_NloNa8",
+    thumbnail: "https://img.youtube.com/vi/5bNI_NloNa8/maxresdefault.jpg",
+  },
+  {
+    id: 7,
+    title: "How To Deal With Anxiety | Buddhism In English",
+    link: "https://www.youtube.com/watch?v=nnSRJ5PRPWQ",
+    thumbnail: "https://img.youtube.com/vi/nnSRJ5PRPWQ/maxresdefault.jpg",
+  },
+  {
+    id: 8,
+    title: "Know More About Depressions",
+    link: "https://www.youtube.com/watch?v=i7hVrM9Gpz0",
+    thumbnail: "https://img.youtube.com/vi/i7hVrM9Gpz0/maxresdefault.jpg",
+  },
+  {
+    id: 9,
+    title: "We All Have Mental Health",
+    link: "https://www.youtube.com/watch?v=DxIDKZHW3-E",
+    thumbnail: "https://img.youtube.com/vi/DxIDKZHW3-E/maxresdefault.jpg",
+  },
+   {
+    id: 10,
+    title: "How Exercise Affects the Brain",
+    link: "https://www.youtube.com/watch?v=lk3mrNqhn24",
+    thumbnail: "https://img.youtube.com/vi/lk3mrNqhn24/maxresdefault.jpg",
+  },
 ];
 
 const Awareness = () => {

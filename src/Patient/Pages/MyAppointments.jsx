@@ -125,19 +125,12 @@ function MyAppointments() {
                 </div>
 
                 {/* Buttons */}
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
                   <button
                     className="flex items-center justify-center gap-2 bg-[#9575CD] hover:bg-[#7E57C2] text-white py-2 rounded-lg"
                     onClick={() => open("medicine", item)}
                   >
-                    <FaPills /> Medicines
-                  </button>
-
-                  <button
-                    className="flex items-center justify-center gap-2 bg-[#D1C4E9] hover:bg-[#C5B1E5] text-[#1E142F] py-2 rounded-lg"
-                    onClick={() => open("profile", item)}
-                  >
-                    <FaUser /> Profile
+                    <FaPills /> View Medicines
                   </button>
 
                   <button
@@ -165,10 +158,38 @@ function MyAppointments() {
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-5 z-50">
           <div className="bg-white w-full max-w-md p-6 rounded-xl shadow-xl">
             <h2 className="text-xl font-bold text-[#7E57C2] mb-4 capitalize">
-              {openModal}
+              Prescribed Medicines
             </h2>
 
-            <p className="text-gray-700">Feature coming soon 🚀</p>
+            {openModal === "medicine" && (
+              <>
+                {selectedAppointment?.prescription?.length > 0 ? (
+                  <div className="space-y-4">
+                    {selectedAppointment.prescription.map((med, index) => (
+                      <div
+                        key={index}
+                        className="border rounded-lg p-4 bg-[#EDE7F6]"
+                      >
+                        <p className="font-semibold text-[#5E35B1]">
+                          💊 {med.medicine}
+                        </p>
+                        <p className="text-sm">Dosage: {med.dosage}</p>
+                        <p className="text-sm">Duration: {med.duration}</p>
+                        {med.notes && (
+                          <p className="text-sm text-gray-600">
+                            Notes: {med.notes}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600 text-center">
+                    No medicines prescribed yet
+                  </p>
+                )}
+              </>
+            )}
 
             <button
               className="mt-6 w-full bg-[#7E57C2] text-white py-2 rounded-lg"

@@ -45,10 +45,10 @@ function BuyMedicines() {
           <div className="w-full bg-[#FAF7FF] py-16 px-6 md:px-20">
             <div className="text-center mb-12">
               <h1 className="text-4xl font-bold text-[#7E57C2]">
-                Buy Medicines Online
+                Buy Medicines and Medical Equipments Online
               </h1>
               <p className="mt-3 text-[#1E142F] md:w-2/3 mx-auto">
-                Order genuine medicines at the best price.
+                Order genuine medicines and equipments at the best price.
               </p>
             </div>
           </div>
