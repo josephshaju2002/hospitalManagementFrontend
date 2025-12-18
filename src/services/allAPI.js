@@ -151,3 +151,9 @@ export const getAdminDashboardCountsAPI = (reqHeader) => {
   return commonAPI("GET",`${SERVERURL}/admin/dashboard-counts`,"",reqHeader);
 };
 
+// get all appointments
+export const getAllAppointmentsAdminAPI = (reqHeader) => {
+  return commonAPI("GET",`${SERVERURL}/admin/all-appointments`,"",reqHeader);
+};
+
+

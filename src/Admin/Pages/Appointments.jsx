@@ -1,38 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeader from "../Components/Adminheader";
 import AdminSidebar from "../Components/AdminSidebar";
 import { FaCalendarAlt, FaSearch, FaUser, FaUserMd } from "react-icons/fa";
 import Footer2 from "../../Common/Components/Footer2";
+import { getAllAppointmentsAdminAPI } from "../../services/allAPI";
 
 function Appointments() {
   const [search, setSearch] = useState("");
 
-  const appointments = [
-    {
-      id: 1,
-      doctor: "Dr. Anita Joseph",
-      patient: "Joseph Mathew",
-      date: "2025-02-12",
-      time: "10:30 AM",
-      status: "Completed",
-    },
-    {
-      id: 2,
-      doctor: "Dr. Rahul Nair",
-      patient: "Manu P",
-      date: "2025-02-12",
-      time: "12:00 PM",
-      status: "Pending",
-    },
-    {
-      id: 3,
-      doctor: "Dr. Lekha Varghese",
-      patient: "Sneha T",
-      date: "2025-02-14",
-      time: "3:15 PM",
-      status: "Cancelled",
-    },
-  ];
+  const [appointments, setAppointments] = useState([]);
+
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  const fetchAppointments = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getAllAppointmentsAdminAPI(reqHeader);
+
+      if (res.status === 200) {
+        setAppointments(res.data.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const filteredAppointments = appointments.filter(
+    (a) =>
+      a.patientId?.username.toLowerCase().includes(search.toLowerCase()) ||
+      a.doctorId?.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <>
@@ -46,7 +50,9 @@ function Appointments() {
           {/* Header */}
           <div className="bg-[#7E57C2] text-white p-7 rounded-xl shadow mb-10 text-center">
             <h1 className="text-3xl md:text-4xl font-bold">All Appointments</h1>
-            <p className="mt-2 text-lg">View all patient-doctor appointments.</p>
+            <p className="mt-2 text-lg">
+              View all patient-doctor appointments.
+            </p>
           </div>
 
           <div className="max-w-7xl mx-auto bg-[#EDE7F6] p-4 md:p-6 rounded-xl shadow">
@@ -74,64 +80,47 @@ function Appointments() {
                     <th className="p-3 text-left">Date</th>
                     <th className="p-3 text-left">Time</th>
                     <th className="p-3 text-left">Status</th>
-                    <th className="p-3 text-left">Action</th>
                   </tr>
                 </thead>
 
                 <tbody className="text-xs md:text-sm">
-                  {appointments.map((a) => (
+                  {filteredAppointments.map((a) => (
                     <tr
-                      key={a.id}
+                      key={a._id}
                       className="border-b hover:bg-[#FAF7FF] transition"
                     >
-                      {/* Patient */}
                       <td className="p-3">
-                        <div className="flex items-center gap-2 min-w-[120px]">
-                          <FaUser className="text-blue-600 text-base md:text-lg" />
-                          <span className="truncate">{a.patient}</span>
-                        </div>
-                      </td>
-
-                      {/* Doctor */}
-                      <td className="p-3">
-                        <div className="flex items-center gap-2 min-w-[120px]">
-                          <FaUserMd className="text-green-600 text-base md:text-lg" />
-                          <span className="truncate">{a.doctor}</span>
-                        </div>
-                      </td>
-
-                      {/* Date */}
-                      <td className="p-3 min-w-[90px]">
                         <div className="flex items-center gap-2">
-                          <FaCalendarAlt className="text-[#9575CD] text-base md:text-lg" />
-                          <span>{a.date}</span>
+                          <FaUser className="text-blue-600" />
+                          {a.patientId?.username}
                         </div>
                       </td>
 
-                      {/* Time */}
-                      <td className="p-3 min-w-[80px]">{a.time}</td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <FaUserMd className="text-green-600" />
+                          {a.doctorId?.name}
+                        </div>
+                      </td>
 
-                      {/* Status */}
-                      <td className="p-3 min-w-[90px]">
+                      <td className="p-3">{a.date}</td>
+                      <td className="p-3">{a.time}</td>
+
+                      <td className="p-3">
                         <span
-                          className={`px-2 md:px-3 py-1 rounded-full text-white text-[10px] md:text-xs font-semibold ${
+                          className={`px-3 py-1 rounded-full text-white ${
                             a.status === "Completed"
                               ? "bg-green-600"
                               : a.status === "Pending"
                               ? "bg-yellow-500"
-                              : "bg-red-600"
+                              : "bg-blue-600"
                           }`}
                         >
                           {a.status}
                         </span>
                       </td>
 
-                      {/* Action */}
-                      <td className="p-3 min-w-[90px]">
-                        <button className="bg-blue-600 text-white px-3 md:px-4 py-1 rounded-lg shadow text-xs md:text-sm hover:bg-blue-700">
-                          View
-                        </button>
-                      </td>
+                      
                     </tr>
                   ))}
                 </tbody>
