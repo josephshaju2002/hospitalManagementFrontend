@@ -42,7 +42,7 @@ function Appointments() {
     <>
       <AdminHeader />
       <div className="md:grid md:grid-cols-[1fr_4fr]">
-        <div>
+        <div className="bg-[#EDE7F6]">
           <AdminSidebar />
         </div>
 

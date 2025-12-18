@@ -6,6 +6,7 @@ import { FaUsers } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import Footer2 from "../../Common/Components/Footer2";
 import Hospital from "../../Media/Medipulse.png";
+
 import { getAdminDashboardCountsAPI } from "../../services/allAPI";
 
 function AdminHome() {
@@ -48,7 +49,7 @@ const fetchDashboardCounts = async () => {
           <AdminSidebar />
         </div>
 
-        <div className="p-6">
+        <div className="pt-1 pe-1">
           <div className="bg-gradient-to-r from-[#7E57C2] to-[#9575CD] text-white p-6 rounded-xl mb-8 shadow-lg flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold">Welcome Admin</h1>

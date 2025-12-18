@@ -14,7 +14,6 @@ function Messages() {
   const [userMessage, setUserMessage] = useState(false);
   const [messages, setMessages] = useState([]);
 
-  // 🔐 token
   const token = sessionStorage.getItem("token");
 
   const reqHeader = {

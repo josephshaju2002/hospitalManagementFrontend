@@ -9,7 +9,7 @@ function AdminSettings() {
     <>
       <AdminHeader/>
       <div className="md:grid grid-cols-[1fr_4fr]">
-        <div>
+        <div className="bg-[#EDE7F6]">
           <AdminSidebar/>
         </div>
         <div className="p-4 bg-[#FAF7FF] min-h-screen">

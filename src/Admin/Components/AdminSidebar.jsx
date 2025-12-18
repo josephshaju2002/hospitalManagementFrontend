@@ -30,7 +30,7 @@ function AdminSidebar() {
 
         {/* Username */}
         <h1 className="text-2xl mb-10 text-[#5E35B1] font-semibold">
-          Joseph Shaju
+          Medipulse Admin
         </h1>
 
         {/* Menu */}

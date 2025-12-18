@@ -156,4 +156,14 @@ export const getAllAppointmentsAdminAPI = (reqHeader) => {
   return commonAPI("GET",`${SERVERURL}/admin/all-appointments`,"",reqHeader);
 };
 
+// Get all doctors (admin)
+export const getAllDoctorsAdminAPI = (reqHeader) => {
+  return commonAPI("GET",`${SERVERURL}/all-doctors`,"",reqHeader);
+};
+
+// Get single doctor profile (admin)
+export const getSingleDoctorProfileAdminAPI = (id, reqHeader) => {
+  return commonAPI("GET",`${SERVERURL}/get-single-doctor/${id}`,"",reqHeader);
+};
+
 
