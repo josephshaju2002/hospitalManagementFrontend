@@ -145,3 +145,9 @@ export const getDoctorMessagesAPI = (reqHeader) => {
 export const deleteMessageAPI = (id, reqHeader) => {
   return commonAPI("DELETE",`${SERVERURL}/delete-messages/${id}`,{},reqHeader);
 };
+
+// get dashboard counts
+export const getAdminDashboardCountsAPI = (reqHeader) => {
+  return commonAPI("GET",`${SERVERURL}/admin/dashboard-counts`,"",reqHeader);
+};
+

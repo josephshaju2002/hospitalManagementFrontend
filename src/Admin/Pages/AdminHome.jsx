@@ -1,18 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeader from "../Components/Adminheader";
 import AdminSidebar from "../Components/AdminSidebar";
 import { FaBook } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import Footer2 from "../../Common/Components/Footer2";
+import Hospital from "../../Media/Medipulse.png";
+import { getAdminDashboardCountsAPI } from "../../services/allAPI";
 
 function AdminHome() {
+
+  const [counts, setCounts] = useState({
+  users: 0,
+  doctors: 0,
+  appointments: 0,
+});
+
+useEffect(() => {
+  fetchDashboardCounts();
+}, []);
+
+const fetchDashboardCounts = async () => {
+  try {
+    const token = sessionStorage.getItem("token");
+
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    const res = await getAdminDashboardCountsAPI(reqHeader);
+
+    if (res.status === 200) {
+      setCounts(res.data.data);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
   return (
     <>
       <AdminHeader />
 
       <div className="md:grid grid-cols-[1fr_4fr] bg-[#FAF7FF] min-h-screen">
-        <div>
+        <div className="bg-[#EDE7F6]">
           <AdminSidebar />
         </div>
 
@@ -41,7 +73,7 @@ function AdminHome() {
                 </div>
                 <div>
                   <h1 className="font-semibold">Total Appointments:</h1>
-                  <span className="text-2xl font-bold">85</span>
+                  <span className="text-2xl font-bold">{counts.appointments}</span>
                 </div>
               </div>
             </div>
@@ -54,7 +86,7 @@ function AdminHome() {
                 </div>
                 <div>
                   <h1 className="font-semibold">Total Users:</h1>
-                  <span className="text-2xl font-bold">85</span>
+                  <span className="text-2xl font-bold">{counts.users}</span>
                 </div>
               </div>
             </div>
@@ -67,10 +99,13 @@ function AdminHome() {
                 </div>
                 <div>
                   <h1 className="font-semibold">Total Doctors:</h1>
-                  <span className="text-2xl font-bold">85</span>
+                  <span className="text-2xl font-bold">{counts.doctors}</span>
                 </div>
               </div>
             </div>
+          </div>
+          <div>
+            <img className="w-full h-screen mt-5" src={Hospital} alt="" />
           </div>
         </div>
       </div>
