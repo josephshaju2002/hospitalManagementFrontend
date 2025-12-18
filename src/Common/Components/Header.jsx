@@ -31,15 +31,21 @@ const pages = [
   { name: "Cart", path: "/cart", icon: <FaCartPlus /> },
 ];
 
-const settings = [
-  { name: "Profile", path: "/profile" },
-  // { name: "My Appointments", path: "/myappo" },
-  // { name: "Buy Medicines", path: "/buymed" },
-  { name: "Logout", path: "/login" },
-];
+const settings = [{ name: "Profile", path: "/profile" }, { name: "Logout" }];
 
 function Header() {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // sessionStorage.removeItem("token");
+    // sessionStorage.removeItem("existingUser");
+    sessionStorage.clear();
+
+    setToken("");
+    setAvatar(DEFAULT_AVATAR);
+
+    navigate("/");
+  };
 
   const { updateProfileStatus } = useContext(userProfileUpdate);
 
@@ -216,11 +222,17 @@ function Header() {
                   <MenuItem
                     key={name}
                     onClick={() => {
-                      navigate(path);
+                      if (name === "Logout") {
+                        handleLogout(); // 🔥 actual logout
+                      } else {
+                        navigate(path); // profile
+                      }
                       handleCloseUserMenu();
                     }}
                   >
-                    <Typography>{name}</Typography>
+                    <Typography color={name === "Logout" ? "error" : "inherit"}>
+                      {name}
+                    </Typography>
                   </MenuItem>
                 ))}
               </Menu>

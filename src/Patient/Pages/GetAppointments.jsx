@@ -130,9 +130,13 @@ function GetAppointments() {
                 <p className="text-[#7E57C2] font-semibold">
                   {doc.specialization}
                 </p>
+                <p className="text-green-500 font-semibold mb-2">
+                  Appointment Fees : {doc.fee}
+                </p>
                 <p className="text-gray-600 text-sm">
                   Experience: {doc.experience}
                 </p>
+                
 
                 {/* Available Days */}
                 <div className="mt-3 flex gap-2 flex-wrap">
