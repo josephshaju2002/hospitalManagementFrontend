@@ -1,10 +1,22 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TiThMenu } from "react-icons/ti";
 import { IoPersonOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
 
 function DoctorHeader() {
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+      // sessionStorage.removeItem("token");
+      // sessionStorage.removeItem("existingUser");
+      sessionStorage.clear();
+  
+      // setToken("");
+      // setAvatar(DEFAULT_AVATAR);
+  
+      navigate("/");
+    };
   const [listStatus, setlistStatus] = useState(false);
   return (
     <>
@@ -26,11 +38,9 @@ function DoctorHeader() {
         {/* social + login */}
         <div className="md:flex justify-end items-center hidden text-[#1E142F]">
           
-          <Link to={"/login"}>
-            <button className="flex justify-between gap-2 items-center border border-[#7E57C2] rounded px-3 py-2 ms-3 hover:bg-[#7E57C2] hover:text-white transition">
+            <button onClick={handleLogout} className="flex justify-between gap-2 items-center border border-[#7E57C2] rounded px-3 py-2 ms-3 hover:bg-[#7E57C2] hover:text-white transition">
               <IoPersonOutline /> LOGOUT
             </button>
-          </Link>
         </div>
       </div>
 
@@ -39,11 +49,9 @@ function DoctorHeader() {
           <button onClick={() => setlistStatus(!listStatus)}>
             <TiThMenu className="2xl text-white" />
           </button>
-          <Link to={"/login"}>
-            <button className="flex justify-between items-center gap-2 border border-white rounded px-3 py-2 ms-3 hover:bg-white hover:text-[#7E57C2] transition">
+            <button onClick={handleLogout} className="flex justify-between items-center gap-2 border border-white rounded px-3 py-2 ms-3 hover:bg-white hover:text-[#7E57C2] transition">
               <IoPersonOutline /> LOGOUT
             </button>
-          </Link>
         </div>
         <ul
           className={

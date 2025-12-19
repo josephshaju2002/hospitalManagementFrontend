@@ -1,8 +1,19 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FaPowerOff } from "react-icons/fa";
 
 function AdminHeader() {
+  const navigate = useNavigate()
+  const handleLogout = () => {
+      // sessionStorage.removeItem("token");
+      // sessionStorage.removeItem("existingUser");
+      sessionStorage.clear();
+  
+      // setToken("");
+      // setAvatar(DEFAULT_AVATAR);
+  
+      navigate("/");
+    };
   return (
     <>
       <div className="grid grid-cols-3 p-3 bg-[#FAF7FF] shadow-md">
@@ -30,24 +41,21 @@ function AdminHeader() {
 
         {/* logout */}
         <div className="md:flex justify-end items-center hidden">
-          <Link to={"/login"}>
-            <button className="flex justify-between gap-2 items-center 
+          
+            <button onClick={handleLogout} className="flex justify-between gap-2 items-center 
               border border-[#5E35B1] text-[#5E35B1] rounded px-3 py-2 ms-3 
               hover:bg-[#5E35B1] hover:text-white transition">
               <FaPowerOff /> Logout
             </button>
-          </Link>
         </div>
 
         {/* mobile logout */}
         <div className="md:hidden flex justify-end col-span-3">
-          <Link to={"/login"}>
-            <button className="flex justify-between gap-2 items-center 
+            <button onClick={handleLogout} className="flex justify-between gap-2 items-center 
               border border-[#5E35B1] text-[#5E35B1] rounded px-3 py-2 ms-3 
               hover:bg-[#5E35B1] hover:text-white transition">
               <FaPowerOff /> Logout
             </button>
-          </Link>
         </div>
 
       </div>
