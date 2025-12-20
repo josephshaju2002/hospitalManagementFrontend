@@ -23,7 +23,7 @@ function AdminHeader() {
           <img
             width={"50px"}
             height={"50px"}
-            src="https://static.vecteezy.com/system/resources/thumbnails/002/610/084/small/cross-symbol-healthcare-medical-and-hospital-pictogram-silhouette-style-icon-free-vector.jpg"
+            src="https://icons.iconarchive.com/icons/graphicloads/100-flat-2/256/hospital-bed-icon.png"
             alt=""
             className="rounded-full border-2 border-[#7E57C2]"
           />

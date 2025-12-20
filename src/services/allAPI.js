@@ -166,4 +166,9 @@ export const getSingleDoctorProfileAdminAPI = (id, reqHeader) => {
   return commonAPI("GET",`${SERVERURL}/get-single-doctor/${id}`,"",reqHeader);
 };
 
+// admin settings
+export const updateAdminSettingsAPI = (reqBody, reqHeader) => {
+  return commonAPI("PUT",`${SERVERURL}/updateadmin-settings`,reqBody,reqHeader);
+};
+
 

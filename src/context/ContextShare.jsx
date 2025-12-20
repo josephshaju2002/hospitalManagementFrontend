@@ -1,18 +1,18 @@
 import React, { createContext, useState } from 'react'
 
 export const userProfileUpdate = createContext()
-// export const adminProfileUpdate = createContext()
+export const adminProfileUpdate = createContext()
 
 function ContextShare({children}) {
 
     const [updateProfileStatus,setUpdateProfileStatus] = useState({})
-    // const [adminProfileStatus,setAdminProfileStatus] = useState({})
+    const [adminProfileStatus,setAdminProfileStatus] = useState({})
 
   return (
     <userProfileUpdate.Provider value={{updateProfileStatus, setUpdateProfileStatus}}>
-      {/* <adminProfileUpdate.Provider value={{adminProfileStatus,setAdminProfileStatus}}> */}
+      <adminProfileUpdate.Provider value={{adminProfileStatus,setAdminProfileStatus}}>
       {children}
-      {/* </adminProfileUpdate.Provider> */}
+      </adminProfileUpdate.Provider>
     </userProfileUpdate.Provider>
   )
 }

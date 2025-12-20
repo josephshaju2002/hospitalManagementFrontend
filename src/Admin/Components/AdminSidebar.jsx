@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { GiMedicines } from "react-icons/gi";
 import { FaCalendarPlus } from "react-icons/fa";
@@ -6,76 +6,79 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { TiMessages } from "react-icons/ti";
 import { IoSettings } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import SERVERURL from "../../services/serverURL";
+import { adminProfileUpdate } from "../../context/ContextShare";
 
 function AdminSidebar() {
+  const DEFAULT_AVATAR =
+    "https://cdn-icons-png.flaticon.com/512/2922/2922510.png";
+
+  const { adminProfileStatus } = useContext(adminProfileUpdate);
+
+  const [admin, setAdmin] = useState({
+    username: "Admin",
+    profile: "",
+  });
+
+  /* ================= INITIAL LOAD ================= */
+  useEffect(() => {
+    const storedAdmin = JSON.parse(sessionStorage.getItem("existingUser"));
+    if (storedAdmin && storedAdmin.role === "admin") {
+      setAdmin(storedAdmin);
+    }
+  }, []);
+
+  /* ================= UPDATE WHEN CONTEXT CHANGES ================= */
+  useEffect(() => {
+    if (adminProfileStatus?.data) {
+      setAdmin(adminProfileStatus.data);
+    }
+  }, [adminProfileStatus]);
+
   return (
-    <>
-      <div
-        className="w-full md:min-h-screen flex items-center flex-col  
-        bg-[#FAF7FF] border-r-4 border-[#EDE7F6]"
-      >
-        {/* Profile Image */}
-        <div className="my-10">
-          <img
-            src="https://www.pngkey.com/png/detail/202-2024792_user-profile-icon-png-download-fa-user-circle.png"
-            alt="profile image"
-            style={{
-              width: "170px",
-              height: "170px",
-              borderRadius: "50%",
-              border: "4px solid #7E57C2",
-            }}
-          />
-        </div>
-
-        {/* Username */}
-        <h1 className="text-2xl mb-10 text-[#5E35B1] font-semibold">
-          Medipulse Admin
-        </h1>
-
-        {/* Menu */}
-        <div className="mb-10 w-full px-6 text-[#1E142F]">
-          <div className="mb-4 flex hover:bg-[#EDE7F6] p-2 rounded-lg transition">
-            <Link to={"/adminhome"} className="flex ms-3">
-              <FaHome className="mt-1 me-2 text-[#7E57C2]" /> Home
-            </Link>
-          </div>
-
-          <div className="mb-4 flex hover:bg-[#EDE7F6] p-2 rounded-lg transition">
-            <Link to={"/medicines"} className="flex ms-3">
-              <GiMedicines className="mt-1 me-2 text-[#7E57C2]" /> Manage
-              Medicines
-            </Link>
-          </div>
-
-          <div className="mb-4 flex hover:bg-[#EDE7F6] p-2 rounded-lg transition">
-            <Link to={"/appointments"} className="flex ms-3">
-              <FaCalendarPlus className="mt-1 me-2 text-[#7E57C2]" />{" "}
-              Appointments
-            </Link>
-          </div>
-
-          <div className="mb-4 flex hover:bg-[#EDE7F6] p-2 rounded-lg transition">
-            <Link to={"/docprofiles"} className="flex ms-3">
-              <FaUserDoctor className="mt-1 me-2 text-[#7E57C2]" /> Doctors
-            </Link>
-          </div>
-
-          <div className="mb-4 flex hover:bg-[#EDE7F6] p-2 rounded-lg transition">
-            <Link to={"/messages"} className="flex ms-3">
-              <TiMessages className="mt-1 me-2 text-[#7E57C2]" /> Messages
-            </Link>
-          </div>
-
-          <div className="mb-4 flex hover:bg-[#EDE7F6] p-2 rounded-lg transition">
-            <Link to={"/adminsettings"} className="flex ms-3">
-              <IoSettings className="mt-1 me-2 text-[#7E57C2]" /> Settings
-            </Link>
-          </div>
-        </div>
+    <div
+      className="w-full md:min-h-screen flex items-center flex-col  
+      bg-[#FAF7FF] border-r-4 border-[#EDE7F6]"
+    >
+      {/* Profile Image */}
+      <div className="my-10">
+        <img
+          src={
+            admin.profile
+              ? `${SERVERURL}/imgUploads/${admin.profile}`
+              : DEFAULT_AVATAR
+          }
+          alt="profile image"
+          className="w-[170px] h-[170px] rounded-full border-4 border-[#7E57C2] object-cover"
+        />
       </div>
-    </>
+
+      {/* Username */}
+      <h1 className="text-2xl mb-10 text-[#5E35B1] font-semibold">
+        {admin.username}
+      </h1>
+
+      {/* Menu */}
+      <div className="mb-10 w-full px-6 text-[#1E142F]">
+        <MenuItem to="/adminhome" icon={<FaHome />} label="Home" />
+        <MenuItem to="/medicines" icon={<GiMedicines />} label="Manage Medicines" />
+        <MenuItem to="/appointments" icon={<FaCalendarPlus />} label="Appointments" />
+        <MenuItem to="/docprofiles" icon={<FaUserDoctor />} label="Doctors" />
+        <MenuItem to="/messages" icon={<TiMessages />} label="Messages" />
+        <MenuItem to="/adminsettings" icon={<IoSettings />} label="Settings" />
+      </div>
+    </div>
   );
 }
+
+/* ===== Reusable Menu Item ===== */
+const MenuItem = ({ to, icon, label }) => (
+  <div className="mb-4 flex hover:bg-[#EDE7F6] p-2 rounded-lg transition">
+    <Link to={to} className="flex ms-3 items-center">
+      <span className="me-2 text-[#7E57C2]">{icon}</span>
+      {label}
+    </Link>
+  </div>
+);
 
 export default AdminSidebar;
