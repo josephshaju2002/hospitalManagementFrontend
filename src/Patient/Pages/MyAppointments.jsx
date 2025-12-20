@@ -6,6 +6,7 @@ import { getMyAppointmentsAPI } from "../../services/allAPI";
 import { cancelAppointmentAPI } from "../../services/allAPI";
 import SERVERURL from "../../services/serverURL";
 import { toast } from "react-toastify";
+import { FaClock } from "react-icons/fa";
 
 function MyAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -16,6 +17,8 @@ function MyAppointments() {
   useEffect(() => {
     fetchAppointments();
   }, []);
+
+  console.log(appointments);
 
   const fetchAppointments = async () => {
     try {
@@ -115,9 +118,14 @@ function MyAppointments() {
                     <p className="text-[#7E57C2] font-semibold">
                       {item.doctorId?.specialization}
                     </p>
-                    <p className="text-gray-600 mt-1">
-                      {item.date} • {item.time}
+                    <p className="flex items-center gap-2 text-gray-600 mt-1">
+                      <FaClock className="text-[#7E57C2]" />
+                      <span>
+                        {item.doctorId?.consultationTime?.start} –{" "}
+                        {item.doctorId?.consultationTime?.end}
+                      </span>
                     </p>
+
                     <span className="text-sm text-green-600 font-semibold">
                       {item.status}
                     </span>
