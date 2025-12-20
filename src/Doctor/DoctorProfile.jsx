@@ -7,6 +7,7 @@ import {
   FaCalendarAlt,
   FaPhoneAlt,
   FaEnvelope,
+  FaClock ,
 } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -34,6 +35,10 @@ export default function DoctorProfile() {
     fee: "",
     duration: "",
     photo: "",
+     consultationTime: {
+    start: "",
+    end: "",
+  },
   });
 
   const fileInputRef = useRef(null);
@@ -57,18 +62,27 @@ export default function DoctorProfile() {
     if (token) fetchDoctorProfile();
   }, [token]);
 
-  const fetchDoctorProfile = async () => {
-    try {
-      const reqHeader = { Authorization: `Bearer ${token}` };
-      const res = await getDoctorProfileAPI(reqHeader);
+ const fetchDoctorProfile = async () => {
+  try {
+    const reqHeader = { Authorization: `Bearer ${token}` };
+    const res = await getDoctorProfileAPI(reqHeader);
 
-      if (res.status === 200) {
-        setDoctor(res.data.data);
-      }
-    } catch (err) {
-      toast.error("Failed to load doctor profile");
+    if (res.status === 200) {
+      const profile = res.data.data;
+
+      setDoctor({
+        ...profile,
+        consultationTime: profile.consultationTime || {
+          start: "",
+          end: "",
+        },
+      });
     }
-  };
+  } catch (err) {
+    toast.error("Failed to load doctor profile");
+  }
+};
+
 
   /* ================= IMAGE ================= */
   const handleImageClick = () => {
@@ -111,6 +125,8 @@ export default function DoctorProfile() {
         availableDays: JSON.stringify(doctor.availableDays),
         qualifications: JSON.stringify(doctor.qualifications),
         skills: JSON.stringify(doctor.skills),
+        consultationTime: JSON.stringify(doctor.consultationTime),
+
       }).forEach(([key, value]) => formData.append(key, value));
 
       if (doctor.photo instanceof File) {
@@ -225,6 +241,59 @@ export default function DoctorProfile() {
             ))}
           </div>
         </div>
+
+        <div className="max-w-5xl mx-auto mt-6 bg-white p-6 rounded-2xl shadow">
+  <h3 className="font-semibold flex gap-2 mb-4">
+    <FaClock /> Consultation Time
+  </h3>
+
+  {isEditing ? (
+    <div className="flex gap-6">
+      {/* Start Time */}
+      <div>
+        <label className="block text-sm text-gray-500 mb-1">Start Time</label>
+        <input
+          type="time"
+          className="border p-2 rounded-lg"
+          value={doctor.consultationTime.start}
+          onChange={(e) =>
+            setDoctor({
+              ...doctor,
+              consultationTime: {
+                ...doctor.consultationTime,
+                start: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
+
+      {/* End Time */}
+      <div>
+        <label className="block text-sm text-gray-500 mb-1">End Time</label>
+        <input
+          type="time"
+          className="border p-2 rounded-lg"
+          value={doctor.consultationTime.end}
+          onChange={(e) =>
+            setDoctor({
+              ...doctor,
+              consultationTime: {
+                ...doctor.consultationTime,
+                end: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
+    </div>
+  ) : (
+    <p className="font-medium">
+      {doctor.consultationTime.start} – {doctor.consultationTime.end}
+    </p>
+  )}
+</div>
+
 
         {/* ================= QUALIFICATIONS ================= */}
         <div className="max-w-5xl mx-auto mt-6 bg-white p-6 rounded-2xl shadow">

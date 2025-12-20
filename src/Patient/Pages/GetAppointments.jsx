@@ -5,6 +5,7 @@ import Footer from "../../Common/Components/Footer";
 import { getAllDoctorsAPI, bookAppointmentAPI } from "../../services/allAPI";
 import SERVERURL from "../../services/serverURL";
 import { toast } from "react-toastify";
+import { FaClock } from "react-icons/fa";
 
 function GetAppointments() {
   const [doctors, setDoctors] = useState([]);
@@ -43,7 +44,7 @@ function GetAppointments() {
 
     const reqBody = {
       doctorId,
-      date: new Date().toISOString().split("T")[0], 
+      date: new Date().toISOString().split("T")[0],
       time: "10:00 AM", // static for now
     };
 
@@ -130,13 +131,26 @@ function GetAppointments() {
                 <p className="text-[#7E57C2] font-semibold">
                   {doc.specialization}
                 </p>
-                <p className="text-green-500 font-semibold mb-2">
+                <p className="text-green-500 font-semibold">
                   Appointment Fees : {doc.fee}
                 </p>
+                {/* Consultation Time */}
+                {doc.consultationTime?.start && doc.consultationTime?.end ? (
+                  <div className="flex items-center mb-2 gap-2 text-sm text-gray-700">
+                    <FaClock className="text-[#7E57C2]" />
+                    <span>
+                      {doc.consultationTime.start} – {doc.consultationTime.end}
+                    </span>
+                  </div>
+                ) : (
+                  <p className="text-gray-400 text-sm mt-2 italic">
+                    Time not set
+                  </p>
+                )}
+
                 <p className="text-gray-600 text-sm">
                   Experience: {doc.experience}
                 </p>
-                
 
                 {/* Available Days */}
                 <div className="mt-3 flex gap-2 flex-wrap">
