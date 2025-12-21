@@ -10,6 +10,7 @@ import {
 } from "../services/allAPI";
 import { toast } from "react-toastify";
 import SERVERURL from "../services/serverURL";
+import ChatBox from "../Common/Components/ChatBox";
 
 function PatientCard() {
   const { appointmentId } = useParams();
@@ -380,7 +381,15 @@ function PatientCard() {
 
           {/* ================= CHAT TAB (UNCHANGED) ================= */}
           {tab === "chat" && (
-            <p className="mt-8 text-center"></p>
+            <ChatBox
+              appointmentId={appointment._id}
+              user={{
+                _id: JSON.parse(sessionStorage.getItem("existingUser"))._id,
+                role: JSON.parse(sessionStorage.getItem("existingUser")).role,
+                username: JSON.parse(sessionStorage.getItem("existingUser"))
+                  .username,
+              }}
+            />
           )}
         </div>
       </div>

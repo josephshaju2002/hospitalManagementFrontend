@@ -7,6 +7,7 @@ import { cancelAppointmentAPI } from "../../services/allAPI";
 import SERVERURL from "../../services/serverURL";
 import { toast } from "react-toastify";
 import { FaClock } from "react-icons/fa";
+import ChatBox from "../../Common/Components/ChatBox";
 
 function MyAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -142,11 +143,12 @@ function MyAppointments() {
                   </button>
 
                   <button
-                    className="flex items-center justify-center gap-2 bg-[#7E57C2] hover:bg-[#5E35B1] text-white py-2 rounded-lg"
                     onClick={() => open("chat", item)}
+                    className="flex items-center justify-center gap-2 bg-[#7E57C2] text-white py-2 rounded-lg"
                   >
                     <FaComments /> Chat
                   </button>
+
                   <button
                     className="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
                     onClick={() => handleCancelAppointment(item._id)}
@@ -165,9 +167,12 @@ function MyAppointments() {
       {openModal && (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-5 z-50">
           <div className="bg-white w-full max-w-md p-6 rounded-xl shadow-xl">
-            <h2 className="text-xl font-bold text-[#7E57C2] mb-4 capitalize">
+            {openModal === "medicine" &&<h2 className="text-xl font-bold text-[#7E57C2] mb-4 capitalize">
               Prescribed Medicines
-            </h2>
+            </h2>}
+            {openModal === "chat" &&<h2 className="text-xl font-bold text-[#7E57C2] mb-4 capitalize">
+              Chat Now
+            </h2>}
 
             {openModal === "medicine" && (
               <>
@@ -197,6 +202,18 @@ function MyAppointments() {
                   </p>
                 )}
               </>
+            )}
+            
+            {openModal === "chat" && (
+              <ChatBox
+                appointmentId={selectedAppointment._id}
+                user={{
+                  _id: JSON.parse(sessionStorage.getItem("existingUser"))._id,
+                  role: JSON.parse(sessionStorage.getItem("existingUser")).role,
+                  username: JSON.parse(sessionStorage.getItem("existingUser"))
+                    .username,
+                }}
+              />
             )}
 
             <button
