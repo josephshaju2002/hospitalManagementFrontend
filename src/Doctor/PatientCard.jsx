@@ -205,16 +205,7 @@ function PatientCard() {
                   />
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="font-semibold">
-                    Appointment Date & Time
-                  </label>
-                  <input
-                    value={`${appointment.date} • ${appointment.time}`}
-                    readOnly
-                    className="w-full p-2 mt-1 bg-gray-200 rounded"
-                  />
-                </div>
+                
               </div>
 
               {/* =================Editable HEALTH STATUS  ================= */}

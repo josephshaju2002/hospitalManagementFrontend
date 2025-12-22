@@ -5,15 +5,23 @@ function ChatBox({ appointmentId, user }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
+  const normalizedRole = user.role === "user" ? "patient" : user.role;
+
+
   /* ================= JOIN ROOM ================= */
   useEffect(() => {
     socket.emit("joinRoom", { appointmentId });
+
+    socket.on("chatHistory", (history) => {
+      setMessages(history);
+    });
 
     socket.on("receiveMessage", (data) => {
       setMessages((prev) => [...prev, data]);
     });
 
     return () => {
+      socket.off("chatHistory");
       socket.off("receiveMessage");
     };
   }, [appointmentId]);
@@ -22,15 +30,15 @@ function ChatBox({ appointmentId, user }) {
   const sendMessage = () => {
     if (!message.trim()) return;
 
-    const data = {
+    socket.emit("sendMessage", {
       appointmentId,
-      sender: user.role, // "doctor" or "patient"
-      senderName: user.username,
-      text: message,
-      time: new Date().toLocaleTimeString(),
-    };
+      sender: {
+        _id: user._id,
+    role: user.role === "user" ? "patient" : user.role,
+      },
+      message,
+    });
 
-    socket.emit("sendMessage", data);
     setMessage("");
   };
 
@@ -42,13 +50,15 @@ function ChatBox({ appointmentId, user }) {
           <div
             key={i}
             className={`p-2 rounded-lg max-w-[70%] ${
-              msg.sender === user.role
+              msg.senderRole === normalizedRole
                 ? "bg-[#7E57C2] text-white ml-auto"
                 : "bg-gray-200"
             }`}
           >
-            <p className="text-sm">{msg.text}</p>
-            <p className="text-xs opacity-70">{msg.time}</p>
+            <p className="text-sm">{msg.message}</p>
+            <p className="text-xs opacity-70">
+              {new Date(msg.createdAt).toLocaleTimeString()}
+            </p>
           </div>
         ))}
       </div>

@@ -10,7 +10,7 @@ function PaymentError() {
         <div className="grid grid-cols-2 py-20 px-40 justify-center items-center">
             <div>
                 <h1 className='text-6xl text-red-700'>Sorry! Your Payment is Unsuccesfull...</h1>
-                <p className='mt-5 mb-10'>We appologize for the inconvinience caused and appreciate your visit to Bookstore.</p>
+                <p className='mt-5 mb-10'>We appologize for the inconvinience caused and appreciate your visit to Medipulse.</p>
                 <Link to={"/buymed"} className='px-4 py-3 bg-blue-600 text-white hover:border hover:border-blue-600 hover:bg-white hover:text-blue-600'>View More Medicines...</Link>
             </div>
             <div>
