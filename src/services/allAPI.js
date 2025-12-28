@@ -103,6 +103,10 @@ export const updatePrescriptionAPI = (appointmentId, reqBody, reqHeader) => {
 };
 
 
+// Terminate appointment
+export const terminateAppointmentAPI = (appointmentId, reqHeader) => {
+  return commonAPI("DELETE",`${SERVERURL}/doctor/terminate-appointment/${appointmentId}`,{},reqHeader);
+};
 
 
 

@@ -11,8 +11,14 @@ import {
 import { toast } from "react-toastify";
 import SERVERURL from "../services/serverURL";
 import ChatBox from "../Common/Components/ChatBox";
+import { terminateAppointmentAPI } from "../services/allAPI";
+import { useNavigate } from "react-router-dom";
+
 
 function PatientCard() {
+
+  const navigate = useNavigate();
+
   const { appointmentId } = useParams();
   const [tab, setTab] = useState("profile");
   const [appointment, setAppointment] = useState(null);
@@ -127,6 +133,32 @@ function PatientCard() {
 
   const patient = appointment.patientId;
 
+
+const handleTerminate = async () => {
+  const confirmTerminate = window.confirm(
+    "Are you sure you want to terminate this appointment?"
+  );
+
+  if (!confirmTerminate) return;
+
+  try {
+    const token = sessionStorage.getItem("token");
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    await terminateAppointmentAPI(appointment._id, reqHeader);
+
+    toast.success("Appointment removed");
+    navigate("/doctorappo");
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to terminate appointment");
+  }
+};
+
+
+
   return (
     <>
       <DoctorHeader />
@@ -204,8 +236,6 @@ function PatientCard() {
                     className="w-full p-2 mt-1 bg-gray-200 rounded"
                   />
                 </div>
-
-                
               </div>
 
               {/* =================Editable HEALTH STATUS  ================= */}
@@ -279,6 +309,9 @@ function PatientCard() {
                     Save Health Status
                   </button>
                 </div>
+                <button onClick={handleTerminate} className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700">
+                  Terminate Appointment
+                </button>
               </div>
             </div>
           )}
